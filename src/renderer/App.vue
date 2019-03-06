@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <landing-page></landing-page>
+    <poke-landing></poke-landing>
   </div>
 </template>
 
 <script>
-  import LandingPage from '@/components/LandingPage'
+  import PokeLanding from '@/components/PokeLanding'
 
   export default {
     name: 'poke-vue',
     components: {
-      LandingPage
+      PokeLanding
     }
   }
 </script>
