@@ -7,6 +7,7 @@
           Welcome to your new project!
         </span>
         <system-information></system-information>
+        <loading-state></loading-state>
       </div>
 
       <div class="right-side">
@@ -31,10 +32,11 @@
 
 <script>
   import SystemInformation from './LandingPage/SystemInformation'
+  import LoadingState from './LandingPage/LoadingState'
 
   export default {
     name: 'landing-page',
-    components: { SystemInformation },
+    components: { LoadingState, SystemInformation },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
