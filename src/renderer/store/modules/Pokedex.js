@@ -1,3 +1,4 @@
+import Vue from 'vue'
 const Pokedex = require('pokeapi-js-wrapper')
 const P = new Pokedex.Pokedex()
 const cloneDeep = require('lodash.clonedeep')
@@ -7,7 +8,9 @@ const defaultLanguage = 'en'
 const getInitialState = () => {
   return {
     currentLanguage: defaultLanguage,
+    currentPokemonId: null,
     pokemons: [],
+    pokemonDetails: {},
     pokemonList: {},
     pokemonListCount: 0,
     pokemonListIsLoading: false,
@@ -24,12 +27,32 @@ const getInitialState = () => {
 const state = cloneDeep(getInitialState())
 
 const getters = {
-  pokemonNamesList: state => state.pokemonNames[state.currentLanguage] ? Object.keys(state.pokemonNames[state.currentLanguage]) : [],
+  currentPokemonName: state => {
+    if (state.currentPokemonId === null) return null
+
+    if (state.currentLanguage === defaultLanguage) {
+      return state.pokemonList[state.currentPokemonId].name
+    }
+
+    // Look for the name in the correct language in object
+    Object.keys(state.pokemonNames[state.currentLanguage]).forEach((pokemonLangName) => {
+      if (state.pokemonNames[state.currentLanguage][pokemonLangName] === state.currentPokemonId) return pokemonLangName
+    })
+
+    console.error('Pokemon ' + state.currentPokemonId + ' not found for lang ' + state.currentLanguage)
+    return null
+  },
+  pokemonNamesList: state => state.pokemonNames[state.currentLanguage] ? state.pokemonNames[state.currentLanguage] : [],
   nbPokemonsInList: state => Object.keys(state.pokemonList).length,
   pokedexIsReady: state => {
-    return state.pokemonListCount !== 0 &&
-      Object.keys(state.pokemonList).length >= state.pokemonListCount &&
-      state.pokemonApiLanguages.length > 0
+    // Cheating Vue to force it to properly update the getter by creating vars
+    const pokemonListCountReady = (state.pokemonListCount > 0)
+    const pokemonListReady = (Object.keys(state.pokemonList).length >= state.pokemonListCount)
+    const languagesReady = (state.pokemonApiLanguages.length > 0)
+    return pokemonListCountReady &&
+      pokemonListReady &&
+      typeof state.pokemonList[state.pokemonListCount - 1] !== 'undefined' &&
+      languagesReady
   }
 }
 
@@ -54,6 +77,18 @@ const actions = {
         context.commit('UPDATE_POKEDEX_IS_LOADING', false)
       })
   },
+  loadPokemon (context, pokemonId) {
+    if (context.state.pokedexIsLoading) {
+      return false
+    }
+    P.getPokemonSpeciesByName(pokemonId)
+      .then(function (response) {
+        context.commit('ADD_POKEMON', response)
+      })
+      .catch(function (error) {
+        console.error(error)
+      })
+  },
   loadPokemonListNextPage (context) {
     if (context.state.pokedexIsLoading || context.state.pokemonListIsLoading) {
       return false
@@ -64,7 +99,8 @@ const actions = {
       limit: context.state.pokemonListPagination.limit,
       offset: context.state.pokemonListPagination.currentPage * context.state.pokemonListPagination.limit
     }
-    P.getPokemonsList(interval)
+    // P.getPokemonsList(interval)
+    P.getPokemonSpeciesList(interval)
       .then(function (response) {
         // console.log(response)
 
@@ -97,7 +133,13 @@ const actions = {
 
 const mutations = {
   ADD_TO_POKEMON_LIST (state, newPokeListElements) {
-    Object.assign(state.pokemonList, newPokeListElements)
+    const updatedPokeList = Object.assign(state.pokemonList, newPokeListElements)
+    Vue.set(state, 'pokemonList', updatedPokeList)
+  },
+  ADD_POKEMON (state, pokemon) {
+    let newPokemon = {}
+    newPokemon[pokemon.id] = pokemon
+    Object.assign(state.pokemonDetails, newPokemon)
   },
   /**
    * Add a Pokemon name of a certain language to the pokemon names list
@@ -152,7 +194,7 @@ const mutations = {
     state.pokedexIsLoading = isLoading
   },
   UPDATE_POKEMON_API_LANGUAGES (state, languages) {
-    state.pokemonApiLanguages = languages
+    Vue.set(state, 'pokemonApiLanguages', languages)
   },
   UPDATE_POKEMON_API_LANGUAGES_IS_LOADING (state, isLoading) {
     state.pokemonApiLanguagesIsLoading = isLoading

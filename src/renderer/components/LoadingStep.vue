@@ -52,7 +52,6 @@
       ...mapActions(['loadPokemonApiLanguages', 'loadPokemonListNextPage', 'resetPokedexData']),
       ...{
         loadData () {
-          console.log(this.pokedexIsReady)
           if (!this.pokedex.pokedexIsLoading) {
             if (this.pokedex.pokemonListCount === 0 ||
               Object.keys(this.pokedex.pokemonList).length < this.pokedex.pokemonListCount) {

@@ -3,8 +3,8 @@
     <h3>Master List</h3>
     <div>
       <ul>
-        <li v-for="(pokemonName, index) in pokemonNamesList" :key="index">
-          {{ pokemonName }}
+        <li v-for="(pokemonId, pokemonName) in pokemonNamesList" :key="pokemonId">
+          <a href="#" :data-pokemon-id="pokemonId" @click.prevent="onPokemonClick">{{ pokemonName }}</a>
         </li>
       </ul>
     </div>
@@ -20,6 +20,12 @@
     computed: {
       ...mapGetters(['pokemonNamesList'])
     },
-    methods: { }
+    methods: {
+      ...{
+        onPokemonClick (event) {
+          console.log(event.currentTarget.getAttribute('data-pokemon-id'))
+        }
+      }
+    }
   }
 </script>

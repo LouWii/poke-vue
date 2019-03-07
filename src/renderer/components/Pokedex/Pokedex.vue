@@ -14,7 +14,7 @@
 
 <script>
   import PokeMasterList from './PokeMasterList'
-  import PokeSettings from './PokeSettings'
+  import PokeSettings from '../Settings/PokeSettings'
 
   export default {
     name: 'pokedex',
