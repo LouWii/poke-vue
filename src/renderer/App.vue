@@ -18,9 +18,6 @@
     },
     computed: {
       ...mapGetters(['pokedexIsReady'])
-    },
-    mounted () {
-      console.log('sdds')
     }
   }
 </script>
