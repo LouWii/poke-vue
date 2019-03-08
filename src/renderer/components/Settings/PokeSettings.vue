@@ -5,6 +5,7 @@
       <button type="button" @click="onDumpLanguages">Dump languages</button>
       <button type="button" @click="onDumpPokemonList">Dump pokemon list</button>
       <button type="button" @click="onDumpPokemonNames">Dump pokemon names</button>
+      <button type="button" @click="onDumpPokemonDetails">Dump pokemon details</button>
       <button type="button" @click="onResetAllData">Reset all data</button>
     </div>
   </section>
@@ -27,6 +28,9 @@
         },
         onDumpPokemonList () {
           console.log(this.Pokedex.pokemonList)
+        },
+        onDumpPokemonDetails () {
+          console.log(this.Pokedex.pokemonDetails)
         },
         onDumpPokemonNames () {
           console.log(this.Pokedex.pokemonNames)
