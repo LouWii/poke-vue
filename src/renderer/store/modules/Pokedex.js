@@ -8,7 +8,7 @@ const defaultLanguage = 'en'
 const getInitialState = () => {
   return {
     currentLanguage: defaultLanguage,
-    currentPokemonId: null,
+    currentSection: '',
     loadingPokedexConfirmed: false,
     pokemons: [],
     pokemonDetails: {},
@@ -28,21 +28,6 @@ const getInitialState = () => {
 const state = cloneDeep(getInitialState())
 
 const getters = {
-  currentPokemonName: state => {
-    if (state.currentPokemonId === null) return null
-
-    if (state.currentLanguage === defaultLanguage) {
-      return state.pokemonList[state.currentPokemonId].name
-    }
-
-    // Look for the name in the correct language in object
-    Object.keys(state.pokemonNames[state.currentLanguage]).forEach((pokemonLangName) => {
-      if (state.pokemonNames[state.currentLanguage][pokemonLangName] === state.currentPokemonId) return pokemonLangName
-    })
-
-    console.error('Pokemon ' + state.currentPokemonId + ' not found for lang ' + state.currentLanguage)
-    return null
-  },
   pokemonNamesList: state => state.pokemonNames[state.currentLanguage] ? state.pokemonNames[state.currentLanguage] : [],
   nbPokemonsInList: state => Object.keys(state.pokemonList).length,
   pokedexIsReady: state => {
@@ -133,6 +118,9 @@ const actions = {
   },
   resetPokedexData (context) {
     context.commit('RESET_POKEDEX_DATA')
+  },
+  setCurrentSection (context, sectionName) {
+    context.commit('UPDATE_CURRENT_SECTION', sectionName)
   }
 }
 
@@ -184,16 +172,13 @@ const mutations = {
     })
   },
   RESET_POKEDEX_DATA (state) {
-    console.log(getInitialState())
     let newState = cloneDeep(getInitialState())
     newState.pokedexIsLoading = true
     Object.assign(state, cloneDeep(getInitialState()))
-    // state = getInitialState()
-    // state = Object.assign({}, cloneDeep(getInitialState()))
-    // Object.assign(state, {pokemons: []})
-    // Vue.set(state, 'pokemons', [])
     state.pokedexIsLoading = false
-    console.log(state)
+  },
+  UPDATE_CURRENT_SECTION (state, sectionName) {
+    state.currentSection = sectionName
   },
   UPDATE_LOADING_POKEDEX_CONFIRMED (state, isValidated) {
     state.loadingPokedexConfirmed = isValidated

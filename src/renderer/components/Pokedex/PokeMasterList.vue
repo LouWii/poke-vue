@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
 
   export default {
     name: 'poke-master-list',
@@ -21,9 +21,10 @@
       ...mapGetters(['pokemonNamesList'])
     },
     methods: {
+      ...mapActions(['showPokemon']),
       ...{
         onPokemonClick (event) {
-          console.log(event.currentTarget.getAttribute('data-pokemon-id'))
+          this.showPokemon(event.currentTarget.getAttribute('data-pokemon-id'))
         }
       }
     }
