@@ -1,16 +1,26 @@
 <template>
   <div id="app">
-    <poke-landing></poke-landing>
+    <loading-pokedex v-if="!pokedexIsReady"></loading-pokedex>
+    <pokedex v-else></pokedex>
   </div>
 </template>
 
 <script>
-  import PokeLanding from '@/components/PokeLanding'
+  import {mapGetters} from 'vuex'
+  import LoadingPokedex from '@/components/LoadingPokedex'
+  import Pokedex from '@/components/Pokedex/Pokedex'
 
   export default {
     name: 'poke-vue',
     components: {
-      PokeLanding
+      LoadingPokedex,
+      Pokedex
+    },
+    computed: {
+      ...mapGetters(['pokedexIsReady'])
+    },
+    mounted () {
+      console.log('sdds')
     }
   }
 </script>

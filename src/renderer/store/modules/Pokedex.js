@@ -9,6 +9,7 @@ const getInitialState = () => {
   return {
     currentLanguage: defaultLanguage,
     currentPokemonId: null,
+    loadingPokedexConfirmed: false,
     pokemons: [],
     pokemonDetails: {},
     pokemonList: {},
@@ -51,12 +52,16 @@ const getters = {
     const languagesReady = (state.pokemonApiLanguages.length > 0)
     return pokemonListCountReady &&
       pokemonListReady &&
+      state.loadingPokedexConfirmed &&
       typeof state.pokemonList[state.pokemonListCount - 1] !== 'undefined' &&
       languagesReady
   }
 }
 
 const actions = {
+  confirmPokedexLoaded (context) {
+    context.commit('UPDATE_LOADING_POKEDEX_CONFIRMED', true)
+  },
   loadPokemonApiLanguages (context) {
     if (context.state.pokedexIsLoading || context.state.pokemonApiLanguagesIsLoading) {
       return false
@@ -189,6 +194,9 @@ const mutations = {
     // Vue.set(state, 'pokemons', [])
     state.pokedexIsLoading = false
     console.log(state)
+  },
+  UPDATE_LOADING_POKEDEX_CONFIRMED (state, isValidated) {
+    state.loadingPokedexConfirmed = isValidated
   },
   UPDATE_POKEDEX_IS_LOADING (state, isLoading) {
     state.pokedexIsLoading = isLoading
