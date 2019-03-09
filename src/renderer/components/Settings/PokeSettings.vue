@@ -6,6 +6,7 @@
       <button type="button" @click="onDumpPokemonList">Dump pokemon list</button>
       <button type="button" @click="onDumpPokemonNames">Dump pokemon names</button>
       <button type="button" @click="onDumpPokemonDetails">Dump pokemon details</button>
+      <button type="button" @click="onDumpPokemonVarieties">Dump pokemon varieties</button>
       <button type="button" @click="onResetAllData">Reset all data</button>
     </div>
   </section>
@@ -18,7 +19,7 @@
     name: 'poke-landing',
     components: { },
     computed: {
-      ...mapState(['Languages', 'Pokedex'])
+      ...mapState(['Languages', 'Pokedex', 'Varieties'])
     },
     methods: {
       ...mapActions(['resetPokedexData']),
@@ -34,6 +35,9 @@
         },
         onDumpPokemonNames () {
           console.log(this.Pokedex.pokemonNames)
+        },
+        onDumpPokemonVarieties () {
+          console.log(this.Varieties.varieties)
         },
         onResetAllData () {
           this.resetPokedexData()

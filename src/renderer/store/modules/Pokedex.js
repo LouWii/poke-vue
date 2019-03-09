@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import pokeApi from '../../services/pokedex-api'
+import pokeApi, {getIdFromUrl} from '../../services/pokedex-api'
 
 const cloneDeep = require('lodash.clonedeep')
 
@@ -79,8 +79,7 @@ const actions = {
         let pokeList = {}
         let pokeNameList = []
         response.results.forEach(pokemonElement => {
-          const urlParts = pokemonElement.url.split('/')
-          const pokId = parseInt(urlParts.pop() || urlParts.pop(), 10)
+          const pokId = getIdFromUrl(pokemonElement.url)
           pokeList[pokId] = pokemonElement
           pokeNameList.push({name: pokemonElement.name, id: pokId})
         })
