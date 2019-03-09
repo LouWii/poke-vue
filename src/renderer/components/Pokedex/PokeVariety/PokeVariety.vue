@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters, mapState } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
 
   export default {
     name: 'poke-variety',
@@ -35,11 +35,8 @@
     },
     computed: {
       ...mapGetters(['getVariety']),
-      ...mapState({
-        varieties: (state) => state.Varieties.varieties
-      }),
       ...{
-        currentVariety: function () { return this.varieties[this.pokemonVarietyId] }
+        currentVariety: function () { return this.getVariety(this.pokemonVarietyId) }
       }
     },
     mounted: function () {
