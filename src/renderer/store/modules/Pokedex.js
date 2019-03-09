@@ -33,9 +33,6 @@ const getters = {
     const pokemonListCountReady = (state.pokemonListCount > 0)
     const pokemonListReady = (Object.keys(state.pokemonList).length >= state.pokemonListCount)
     const languagesReady = (rootState.Languages.apiLanguages.length > 0)
-    console.log(pokemonListCountReady)
-    console.log(pokemonListReady)
-    console.log(languagesReady)
     return pokemonListCountReady &&
       pokemonListReady &&
       typeof state.pokemonList[state.pokemonListCount - 1] !== 'undefined' &&
@@ -103,6 +100,7 @@ const actions = {
   },
   resetPokedexData (context) {
     context.commit('RESET_LANGUAGES_DATA')
+    context.commit('RESET_VARIETIES_DATA')
     context.commit('RESET_POKEDEX_DATA')
   },
   setCurrentSection (context, sectionName) {
@@ -146,7 +144,6 @@ const mutations = {
    * @param {*} pokemonPayload Pokemon object from PokeAPI
    */
   ADD_A_POKEMON_NAMES (state, pokemonPayload) {
-    console.log(pokemonPayload.names)
     if (Array.isArray(pokemonPayload.names)) {
       pokemonPayload.names.forEach((pokemonName) => {
         // Create language list if it doesn't exist
