@@ -113,9 +113,7 @@ const mutations = {
     Vue.set(state, 'pokemonList', updatedPokeList)
   },
   ADD_POKEMON (state, pokemon) {
-    let newPokemon = {}
-    newPokemon[pokemon.id] = pokemon
-    Object.assign(state.pokemonDetails, newPokemon)
+    Vue.set(state.pokemonDetails, pokemon.id, pokemon)
   },
   /**
    * Add a Pokemon name of a certain language to the pokemon names list

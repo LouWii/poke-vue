@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import pokeApi, {getIdFromUrl} from '../../services/pokedex-api'
 
 const getInitialState = () => {
@@ -49,9 +50,7 @@ const mutations = {
     state.loadingVarieties.splice(index, 1)
   },
   ADD_VARIETY (state, variety) {
-    const newVariety = {}
-    newVariety[variety.id] = variety
-    Object.assign(state.varieties, newVariety)
+    Vue.set(state.varieties, variety.id, variety)
   },
   RESET_VARIETIES_DATA (state) {
     Object.assign(state, getInitialState())
