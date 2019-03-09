@@ -6,7 +6,8 @@
         :key="index"
         :pokemonVarietyId="getIdFromUrl(pVariety.pokemon.url)"
         :isDefaultVariety="pVariety.is_default"
-        :varietyTempName="pVariety.pokemon.name"></poke-variety>
+        :varietyTempName="pVariety.pokemon.name"
+        :pokemonHasMultiple="pokemon.varieties.length != 1"></poke-variety>
     </div>
   </section>
 </template>

@@ -1,11 +1,12 @@
 <template>
-  <section class="pokemon-variety">
-    <header>
-      <h4>{{pokemonVarietyId}} - {{varietyTempName}}</h4>
+  <section class="pokemon-variety" :data-id="pokemonVarietyId">
+    <header v-if="pokemonHasMultiple">
+      <h4 v-if="currentVariety">{{ currentVariety.name }}</h4>
+      <h4 v-else>{{ varietyTempName }}</h4>
     </header>
     <div v-if="currentVariety">
-      <div class=""><label>Height</label><span>{{currentVariety.height}}</span></div>
-      <div class=""><label>Weight</label><span>{{currentVariety.height}}</span></div>
+      <div class=""><label>Height</label><span>{{ currentVariety.height }}</span></div>
+      <div class=""><label>Weight</label><span>{{ currentVariety.height }}</span></div>
     </div>
   </section>
 </template>
@@ -26,7 +27,7 @@
       },
       pokemonHasMultiple: {
         type: Boolean,
-        default: false
+        default: true
       },
       varietyTempName: {
         type: String,
@@ -49,3 +50,13 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .pokemon-variety {
+    header {
+      h4 {
+        text-transform: capitalize
+      }
+    }
+  }
+</style>

@@ -35,11 +35,6 @@
           this.closePokemon()
         }
       }
-    },
-    watch: {
-      currentPokemon: function (newp, old) {
-        console.log(newp)
-      }
     }
   }
 </script>
