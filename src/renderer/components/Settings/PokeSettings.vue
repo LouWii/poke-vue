@@ -18,13 +18,13 @@
     name: 'poke-landing',
     components: { },
     computed: {
-      ...mapState(['Pokedex'])
+      ...mapState(['Languages', 'Pokedex'])
     },
     methods: {
       ...mapActions(['resetPokedexData']),
       ...{
         onDumpLanguages () {
-          console.log(this.Pokedex.pokemonApiLanguages)
+          console.log(this.Languages.apiLanguages)
         },
         onDumpPokemonList () {
           console.log(this.Pokedex.pokemonList)

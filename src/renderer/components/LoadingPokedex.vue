@@ -1,7 +1,8 @@
 <template>
   <div class="loading-pokedex">
     <div class="loading-content">
-      <h2>Preparing Pokedex</h2>
+      <h2 v-if="pokedexIsLoading">Preparing Pokedex</h2>
+      <h2 v-else>Pokedex Ready!</h2>
       <div class="loading-steps">
         <ul>
           <li>
@@ -12,14 +13,15 @@
           </li>
           <li>
             Loading languages list
-            <span v-if="pokedex.pokemonApiLanguages.length != 0">
-              ({{pokedex.pokemonApiLanguages.length}} languages found)
+            <span v-if="languages.apiLanguages.length != 0">
+              ({{languages.apiLanguages.length}} languages found)
             </span>
           </li>
         </ul>
       </div>
       <div class="actions">
-        <button type="button" @click="onConfirmData">Launch Pokedex</button>
+        <button v-if="pokedexReadyToConfirm" type="button" @click="onConfirmData">Launch Pokedex</button>
+        <button v-if="showReset" type="button" @click="onResetData">Reset data</button>
       </div>
     </div>
   </div>
@@ -31,22 +33,35 @@
   export default {
     name: 'loading-pokedex',
     components: { },
+    data: function () {
+      return {
+        showReset: false,
+        showResetTimeout: null
+      }
+    },
     mounted () {
+      this.showResetTimeout = setTimeout(function () { this.showReset = true }.bind(this), 5000)
+
       this.loadData()
     },
     computed: {
-      ...mapGetters(['pokedexIsReady', 'nbPokemonsInList']),
+      ...mapGetters(['pokedexReadyToConfirm', 'nbPokemonsInList']),
       ...mapState({
         pokedex: state => state.Pokedex,
+        languages: state => state.Languages,
         pokedexIsLoading: state => state.Pokedex.pokedexIsLoading,
         pokemonListIsLoading: state => state.Pokedex.pokemonListIsLoading,
         pokemonLanguagesIsLoading: state => state.Pokedex.pokemonLanguagesIsLoading
       })
     },
     methods: {
-      ...mapActions(['confirmPokedexLoaded', 'loadPokemonApiLanguages', 'loadPokemonListNextPage', 'resetPokedexData']),
+      ...mapActions(['confirmPokedexLoaded', 'loadApiLanguages', 'loadPokemonListNextPage', 'resetPokedexData']),
       ...{
         loadData () {
+          if (this.pokedexReadyToConfirm) {
+            clearTimeout(this.showResetTimeout)
+          }
+
           if (!this.pokedex.pokedexIsLoading) {
             if (this.pokedex.pokemonListCount === 0 ||
               Object.keys(this.pokedex.pokemonList).length < this.pokedex.pokemonListCount) {
@@ -54,7 +69,7 @@
               this.loadPokemonListNextPage()
             } else if (this.pokedex.pokemonApiLanguages.length === 0) {
               this.debug += ' Loading languages...'
-              this.loadPokemonApiLanguages()
+              this.loadApiLanguages()
             }
           }
         },
@@ -69,7 +84,7 @@
     watch: {
       pokedex: {
         handler: function (newPokedex, oldPokedex) {
-          console.log(newPokedex)
+          // console.log(newPokedex)
           this.loadData()
         },
         deep: true
