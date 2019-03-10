@@ -23,7 +23,7 @@
           <li>
             Loading versions
             <span v-if="versions.versionsListCount != 0">
-              (/{{versions.versionsListCount}})
+              ({{Object.keys(versions.versions).length}}/{{versions.versionsListCount}})
             </span>
           </li>
         </ul>
@@ -59,13 +59,21 @@
         pokedex: state => state.Pokedex,
         languages: state => state.Languages,
         versions: state => state.Versions,
+        versionsList: state => state.Versions.versionsList,
         pokedexIsLoading: state => state.Pokedex.pokedexIsLoading,
         pokemonListIsLoading: state => state.Pokedex.pokemonListIsLoading,
         pokemonLanguagesIsLoading: state => state.Pokedex.pokemonLanguagesIsLoading
       })
     },
     methods: {
-      ...mapActions(['confirmPokedexLoaded', 'loadApiLanguages', 'loadPokemonListNextPage', 'resetPokedexData']),
+      ...mapActions([
+        'confirmPokedexLoaded',
+        'loadApiLanguages',
+        'loadVersionList',
+        'loadAllVersions',
+        'loadPokemonListNextPage',
+        'resetPokedexData'
+      ]),
       ...{
         loadData () {
           if (this.pokedexReadyToConfirm) {
@@ -73,6 +81,7 @@
           }
 
           if (!this.pokedex.pokedexIsLoading) {
+            console.log(this.versions.versionsList)
             if (this.pokedex.pokemonListCount === 0 ||
               Object.keys(this.pokedex.pokemonList).length < this.pokedex.pokemonListCount) {
               this.debug += ' Loading page...'
@@ -80,6 +89,10 @@
             } else if (this.languages.apiLanguages.length === 0) {
               this.debug += ' Loading languages...'
               this.loadApiLanguages()
+            } else if (Object.keys(this.versions.versionsList).length === 0) {
+              this.loadVersionList()
+            } else if (Object.keys(this.versions.versions).length === 0) {
+              this.loadAllVersions()
             }
           }
         },
@@ -98,6 +111,10 @@
           this.loadData()
         },
         deep: true
+      },
+      versionsList: (newVersionsList, oldversionsList) => {
+        console.log(newVersionsList)
+        this.loadData()
       }
     }
   }
@@ -126,7 +143,7 @@
       }
 
       .intro-text {
-        
+
       }
 
       .actions {

@@ -104,6 +104,7 @@ const actions = {
   resetPokedexData (context) {
     context.commit('RESET_LANGUAGES_DATA')
     context.commit('RESET_VARIETIES_DATA')
+    context.commit('RESET_VERSIONS_DATA')
     context.commit('RESET_POKEDEX_DATA')
   },
   setCurrentSection (context, sectionName) {

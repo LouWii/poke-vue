@@ -21,7 +21,7 @@ const actions = {
       return false
     }
 
-    context.commit('UPDATE_VERSIONs_LIST_IS_LOADING', true)
+    context.commit('UPDATE_VERSIONS_LIST_IS_LOADING', true)
     context.commit('UPDATE_POKEDEX_IS_LOADING', true)
     pokeApi.getVersionsList()
       .then((response) => {
@@ -37,13 +37,19 @@ const actions = {
       })
       .error((error) => {
         console.error(error)
-        context.commit('UPDATE_VERSIONs_LIST_IS_LOADING', false)
+        context.commit('UPDATE_VERSIONS_LIST_IS_LOADING', false)
         context.commit('UPDATE_POKEDEX_IS_LOADING', false)
       })
   },
   loadAllVersions (context) {
+    let loadCount = 0
     Object.keys(context.state.versionsList).forEach(versionId => {
-      
+      if (typeof context.state.versions[versionId] === 'undefined') {
+        setTimeout(() => {
+          context.dispatch('loadVersion', versionId)
+        }, loadCount * 500)
+        loadCount++
+      }
     })
   },
   loadVersion (context, versionId) {
@@ -51,7 +57,7 @@ const actions = {
       return false
     }
 
-    context.commit(ADD_LOADING_VERSION, versionId)
+    context.commit('ADD_LOADING_VERSION', versionId)
     pokeApi.getVersionByName(versionId)
       .then(response => {
         context.commit('ADD_VERSION', response)
@@ -66,7 +72,7 @@ const actions = {
 
 const mutations = {
   ADD_LOADING_VERSION (state, versionId) {
-    state.loadVersions.push(versionId)
+    state.loadingVersions.push(versionId)
   },
   ADD_VERSION (state, version) {
     Vue.set(state.versions, version.id, version)
@@ -79,8 +85,14 @@ const mutations = {
     const index = state.loadingVersions.indexOf(versionId)
     state.loadingVersions.splice(index, 1)
   },
+  RESET_VERSIONS_DATA (state) {
+    Object.assign(state, getInitialState())
+  },
   UPDATE_VERSIONS_LIST_COUNT (state, versionsListCount) {
     state.versionsListCount = versionsListCount
+  },
+  UPDATE_VERSIONS_LIST_IS_LOADING (state, loading) {
+    state.versionsListLoading = loading
   }
 }
 
