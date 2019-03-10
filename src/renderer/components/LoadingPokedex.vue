@@ -67,7 +67,7 @@
               Object.keys(this.pokedex.pokemonList).length < this.pokedex.pokemonListCount) {
               this.debug += ' Loading page...'
               this.loadPokemonListNextPage()
-            } else if (this.pokedex.pokemonApiLanguages.length === 0) {
+            } else if (this.languages.apiLanguages.length === 0) {
               this.debug += ' Loading languages...'
               this.loadApiLanguages()
             }
