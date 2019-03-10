@@ -33,10 +33,14 @@ const getters = {
     const pokemonListCountReady = (state.pokemonListCount > 0)
     const pokemonListReady = (Object.keys(state.pokemonList).length >= state.pokemonListCount)
     const languagesReady = (rootState.Languages.apiLanguages.length > 0)
+    const versionsReady = (
+      rootState.Versions.versionsListCount !== 0 &&
+      (Object.keys(rootState.Versions.versions).length >= rootState.Versions.versionsListCount))
     return pokemonListCountReady &&
       pokemonListReady &&
-      typeof state.pokemonList[state.pokemonListCount - 1] !== 'undefined' &&
-      languagesReady
+      versionsReady &&
+      languagesReady &&
+      typeof state.pokemonList[state.pokemonListCount - 1] !== 'undefined'
   },
   pokedexIsReady: (state, getters) => {
     return getters.pokedexReadyToConfirm &&

@@ -1,8 +1,11 @@
 <template>
   <div class="loading-pokedex">
     <div class="loading-content">
-      <h2 v-if="pokedexIsLoading">Preparing Pokedex</h2>
+      <h2 v-if="!pokedexReadyToConfirm">Preparing Pokedex</h2>
       <h2 v-else>Pokedex Ready!</h2>
+      <div class="intro-text">
+        We're pre-fetching some data in order to prepare your Pokedex. This only occurs on first launch.
+      </div>
       <div class="loading-steps">
         <ul>
           <li>
@@ -15,6 +18,12 @@
             Loading languages list
             <span v-if="languages.apiLanguages.length != 0">
               ({{languages.apiLanguages.length}} languages found)
+            </span>
+          </li>
+          <li>
+            Loading versions
+            <span v-if="versions.versionsListCount != 0">
+              (/{{versions.versionsListCount}})
             </span>
           </li>
         </ul>
@@ -49,6 +58,7 @@
       ...mapState({
         pokedex: state => state.Pokedex,
         languages: state => state.Languages,
+        versions: state => state.Versions,
         pokedexIsLoading: state => state.Pokedex.pokedexIsLoading,
         pokemonListIsLoading: state => state.Pokedex.pokemonListIsLoading,
         pokemonLanguagesIsLoading: state => state.Pokedex.pokemonLanguagesIsLoading
@@ -113,6 +123,10 @@
         li {
           margin-bottom: 10px;
         }
+      }
+
+      .intro-text {
+        
       }
 
       .actions {
