@@ -27,7 +27,6 @@
       ...mapGetters(['currentPokemon', 'currentPokemonName', 'currentPokemonVarietyIds'])
     },
     mounted () {
-      console.log(this.currentPokemon)
       if (this.currentPokemon === null) {
         this.loadCurrentPokemon()
       }

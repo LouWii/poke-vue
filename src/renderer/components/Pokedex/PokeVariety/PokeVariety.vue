@@ -41,12 +41,20 @@
       }
     },
     mounted: function () {
-      if (typeof this.currentVariety === 'undefined') {
-        this.loadVariety(this.pokemonVarietyId)
-      }
+      this.triggerLoad()
+    },
+    updated: function () {
+      this.triggerLoad()
     },
     methods: {
-      ...mapActions(['loadVariety'])
+      ...mapActions(['loadVariety']),
+      ...{
+        triggerLoad: function () {
+          if (typeof this.currentVariety === 'undefined') {
+            this.loadVariety(this.pokemonVarietyId)
+          }
+        }
+      }
     }
   }
 </script>
