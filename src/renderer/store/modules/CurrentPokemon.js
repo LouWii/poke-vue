@@ -27,6 +27,17 @@ const getters = {
     console.error('Pokemon ' + state.pokemonId + ' not found for lang ' + rootState.Pokedex.currentLanguage)
     return null
   },
+  currentPokemonDefaultVarietyListItem: (state, getters, rootState) => {
+    let defaultVariety = null
+    if (getters.currentPokemon) {
+      getters.currentPokemon.varieties.forEach((pVariety) => { if (pVariety.is_default) defaultVariety = pVariety })
+    }
+    return defaultVariety
+  },
+  currentPokemonDefaultVarietyId: (state, getters, rootState) => {
+    if (getters.currentPokemonDefaultVarietyListItem) return getIdFromUrl(getters.currentPokemonDefaultVarietyListItem.pokemon.url)
+    return null
+  },
   currentPokemonVarietyIds: (state, getters, rootState) => {
     if (getters.currentPokemon) {
       const varietyIds = []

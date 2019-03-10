@@ -3,15 +3,15 @@
     <div class="pokemon-variety-sprite-unknown">
       <!-- Display random shape when we can't display the real one -->
     </div>
-    <div class="pokemon-variety-sprites" v-if="currentFrontDefaultSprite">
+    <div class="pokemon-variety-sprites" v-if="currentFrontSprite">
       <div class="sprite-front">
         <img :src="currentFrontSprite" alt=""/>
       </div>
-      <div class="sprite-back" v-if="currentBackDefaultSprite">
+      <div class="sprite-back" v-if="!displayFrontOnly && currentBackSprite">
         <img :src="currentBackSprite" alt="" />
       </div>
     </div>
-    <div class="pokemon-variety-sprites-nav" v-if="showVarietyMenu">
+    <div class="pokemon-variety-sprites-nav" v-if="displayVarietyFormMenu">
       <button
         data-front-sprite-form="front_default"
         data-back-sprite-form="back_default"
@@ -40,26 +40,26 @@
   import { mapGetters, mapState } from 'vuex'
 
   export default {
-    name: 'poke-varieties-sprites',
+    name: 'poke-variety-sprites',
     props: {
-      showVarietyMenu: {
+      displayFrontOnly: {
         type: Boolean,
         default: false
       },
-      varietyIds: {
-        type: Array,
-        required: true
+      displayVarietyFormMenu: {
+        type: Boolean,
+        default: false
+      },
+      varietyId: {
+        required: true,
+        validator: prop => typeof prop === 'number' || prop === null
       }
     },
     data: function () {
       return {
-        currentVarietyId: null,
         currentSpriteFormFront: 'front_default',
         currentSpriteFormBack: 'back_default'
       }
-    },
-    mounted: function () {
-      this.currentVarietyId = this.varietyIds[0]
     },
     computed: {
       ...mapGetters(['getVariety']),
@@ -67,36 +67,12 @@
         varieties: (state) => state.Varieties.varieties
       }),
       ...{
-        currentVariety: function () { return this.getVariety(this.currentVarietyId) },
+        currentVariety: function () { return this.getVariety(this.varietyId) },
         currentFrontSprite: function () {
           return this.currentVariety ? this.currentVariety.sprites[this.currentSpriteFormFront] : null
         },
         currentBackSprite: function () {
           return this.currentVariety ? this.currentVariety.sprites[this.currentSpriteFormBack] : null
-        },
-        currentFrontDefaultSprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.front_default : null
-        },
-        currentBackDefaultSprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.back_default : null
-        },
-        currentFrontFemaleSprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.front_female : null
-        },
-        currentBackFemaleSprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.back_female : null
-        },
-        currentFrontShinySprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.front_shiny : null
-        },
-        currentBackShinySprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.back_shiny : null
-        },
-        currentFrontShinyFemaleSprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.front_shiny_female : null
-        },
-        currentBackShinyFemaleSprite: function () {
-          return this.currentVariety ? this.currentVariety.sprites.back_shiny_female : null
         }
       }
     },
@@ -105,13 +81,6 @@
         onSpriteFormChange: function (event) {
           this.currentSpriteFormFront = event.currentTarget.getAttribute('data-front-sprite-form')
           this.currentSpriteFormBack = event.currentTarget.getAttribute('data-back-sprite-form')
-        }
-      }
-    },
-    watch: {
-      varietyIds: {
-        handler: function (newVarietyIds) {
-          this.currentVarietyId = this.varietyIds[0]
         }
       }
     }

@@ -1,13 +1,11 @@
 <template>
   <div class="pokemon-single">
     <header>
+      <poke-variety-sprites :varietyId="currentPokemonDefaultVarietyId" :displayFrontOnly="true"></poke-variety-sprites>
       <h3>
         {{ currentPokemonName }}
       </h3>
-      <button @click="onClose">X</button>
-      <div class="">
-        <poke-varieties-sprites :varietyIds="currentPokemonVarietyIds"></poke-varieties-sprites>
-      </div>
+      <button class="close" @click="onClose">X</button>
     </header>
     <section class="body-wrapper">
       <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties>
@@ -18,13 +16,13 @@
 <script>
   import {mapGetters, mapActions} from 'vuex'
   import PokeVarieties from './PokeVariety/PokeVarieties'
-  import PokeVarietiesSprites from './PokeVariety/PokeVarietiesSprites'
+  import PokeVarietySprites from './PokeVariety/PokeVarietySprites'
 
   export default {
     name: 'poke-single',
-    components: {PokeVarieties, PokeVarietiesSprites},
+    components: {PokeVarieties, PokeVarietySprites},
     computed: {
-      ...mapGetters(['currentPokemon', 'currentPokemonName', 'currentPokemonVarietyIds'])
+      ...mapGetters(['currentPokemon', 'currentPokemonName', 'currentPokemonDefaultVarietyId', 'currentPokemonVarietyIds'])
     },
     mounted () {
       if (this.currentPokemon === null) {
@@ -74,8 +72,25 @@
     &.yellow {
       
     }
-    h3 {
-      text-transform: capitalize;
+    header {
+      position: relative;
+      text-align: center;
+
+      h3, .pokemon-varieties-sprites {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      h3 {
+        text-transform: capitalize;
+      }
+
+      .close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
     }
+    
   }
 </style>
