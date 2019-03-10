@@ -8,6 +8,9 @@
       <button class="close" @click="onClose">X</button>
     </header>
     <section class="body-wrapper">
+      <div class="pokemon-single-data">
+        <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div>
+      </div>
       <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties>
     </section>
   </div>
@@ -22,7 +25,13 @@
     name: 'poke-single',
     components: {PokeVarieties, PokeVarietySprites},
     computed: {
-      ...mapGetters(['currentPokemon', 'currentPokemonName', 'currentPokemonDefaultVarietyId', 'currentPokemonVarietyIds'])
+      ...mapGetters([
+        'currentPokemon',
+        'currentPokemonGenera',
+        'currentPokemonName',
+        'currentPokemonDefaultVarietyId',
+        'currentPokemonVarietyIds'
+      ])
     },
     mounted () {
       if (this.currentPokemon === null) {
@@ -42,6 +51,11 @@
 
 <style lang="scss">
   .pokemon-single {
+    label {
+      display: inline-block;
+      font-weight: bold;
+      margin: 5px 10px;
+    }
     &.black {
       
     }

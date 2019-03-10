@@ -12,6 +12,15 @@ const state = cloneDeep(getInitialState())
 
 const getters = {
   currentPokemon: (state, getters, rootState) => rootState.Pokedex.pokemonDetails[state.pokemonId] ? rootState.Pokedex.pokemonDetails[state.pokemonId] : null,
+  currentPokemonGenera: (state, getters, rootState) => {
+    let generaStr = null
+    if (getters.currentPokemon) {
+      getters.currentPokemon.genera.forEach(genera => {
+        if (genera.language.name === rootState.Pokedex.currentLanguage) generaStr = genera.genus
+      })
+    }
+    return generaStr
+  },
   currentPokemonName: (state, getters, rootState) => {
     if (state.pokemonId === null) return null
 
@@ -26,6 +35,15 @@ const getters = {
 
     console.error('Pokemon ' + state.pokemonId + ' not found for lang ' + rootState.Pokedex.currentLanguage)
     return null
+  },
+  currentPokemonSummaries: (state, getters, rootState) => {
+    const summaries = []
+    if (getters.currentPokemon) {
+      getters.currentPokemon.flavor_text_entries.forEach(summary => {
+        if (summary.language.name === rootState.Pokedex.currentLanguage) summaries.push(summary)
+      })
+    }
+    return summaries
   },
   currentPokemonDefaultVarietyListItem: (state, getters, rootState) => {
     let defaultVariety = null
