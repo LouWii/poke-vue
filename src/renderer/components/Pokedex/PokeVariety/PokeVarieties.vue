@@ -4,19 +4,26 @@
       <div class="selector">
         <ul>
           <li v-for="(pVariety, index) in pokemon.varieties" :key="index">
-            <button>{{ pVariety.pokemon.name }}</button>
+            <button :data-variety-index="index" @click="selectVariety">{{ pVariety.pokemon.name }}</button>
           </li>
         </ul>
       </div>
     </div>
     <div v-if="pokemon" class="varieties-wrapper">
-      <poke-variety
+      <!-- <poke-variety
         v-for="(pVariety, index) in pokemon.varieties"
         :key="index"
         :pokemonVarietyId="getIdFromUrl(pVariety.pokemon.url)"
         :isDefaultVariety="pVariety.is_default"
         :varietyTempName="pVariety.pokemon.name"
-        :pokemonHasMultiple="pokemon.varieties.length != 1"></poke-variety>
+        :pokemonHasMultiple="pokemon.varieties.length != 1"></poke-variety> -->
+      <poke-variety
+        v-if="selectedVariety"
+        :pokemonVarietyId="getIdFromUrl(selectedVariety.pokemon.url)"
+        :isDefaultVariety="selectedVariety.is_default"
+        :varietyTempName="selectedVariety.pokemon.name"
+        :pokemonHasMultiple="pokemon.varieties.length != 1"
+      ></poke-variety>
     </div>
   </section>
 </template>
@@ -34,9 +41,24 @@
         required: true
       }
     },
+    data: function () {
+      return {
+        selectedVarietyIndex: 0
+      }
+    },
+    computed: {
+      ...{
+        selectedVariety: function () {
+          return this.pokemon.varieties[this.selectedVarietyIndex]
+        }
+      }
+    },
     methods: {
       ...{
-        getIdFromUrl
+        getIdFromUrl,
+        selectVariety (event) {
+          this.selectedVarietyIndex = event.currentTarget.getAttribute('data-variety-index')
+        }
       }
     }
   }

@@ -1,3 +1,5 @@
+import { getIdFromUrl } from '../../services/pokedex-api'
+
 const cloneDeep = require('lodash.clonedeep')
 
 const getInitialState = () => {
@@ -24,6 +26,14 @@ const getters = {
 
     console.error('Pokemon ' + state.pokemonId + ' not found for lang ' + rootState.Pokedex.currentLanguage)
     return null
+  },
+  currentPokemonVarietyIds: (state, getters, rootState) => {
+    if (getters.currentPokemon) {
+      const varietyIds = []
+      getters.currentPokemon.varieties.forEach((pVariety) => varietyIds.push(getIdFromUrl(pVariety.pokemon.url)))
+      return varietyIds
+    }
+    return []
   }
 }
 

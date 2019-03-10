@@ -5,6 +5,9 @@
         {{ currentPokemonName }}
       </h3>
       <button @click="onClose">X</button>
+      <div class="">
+        <poke-varieties-sprites :varietyIds="currentPokemonVarietyIds"></poke-varieties-sprites>
+      </div>
     </header>
     <section class="body-wrapper">
       <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties>
@@ -15,12 +18,13 @@
 <script>
   import {mapGetters, mapActions} from 'vuex'
   import PokeVarieties from './PokeVariety/PokeVarieties'
+  import PokeVarietiesSprites from './PokeVariety/PokeVarietiesSprites'
 
   export default {
     name: 'poke-single',
-    components: {PokeVarieties},
+    components: {PokeVarieties, PokeVarietiesSprites},
     computed: {
-      ...mapGetters(['currentPokemon', 'currentPokemonName'])
+      ...mapGetters(['currentPokemon', 'currentPokemonName', 'currentPokemonVarietyIds'])
     },
     mounted () {
       console.log(this.currentPokemon)
