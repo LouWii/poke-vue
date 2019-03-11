@@ -20,11 +20,16 @@ const winURL = process.env.NODE_ENV === 'development'
 function createWindow () {
   /**
    * Initial window options
+   * https://electronjs.org/docs/api/browser-window#new-browserwindowoptions
    */
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000,
+    height: 550,
+    maxHeight: 1900,
+    maxWidth: 800,
+    minHeight: 400,
+    minWidth: 330,
+    useContentSize: false,
+    width: 450,
     webPreferences: {
       webSecurity: false // Need this for CORS
     }
