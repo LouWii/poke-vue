@@ -27,9 +27,7 @@
         currentSummaryIndex: 0
       }
     },
-    mounted: function () {
-      console.log(this.summaries)
-    },
+    mounted: function () { },
     computed: {
       ...mapGetters(['getVersionNameForLanguage']),
       ...{
@@ -51,7 +49,7 @@
           if (this.currentSummaryIndex < 0) this.currentSummaryIndex = this.summaries.length - 1
         },
         onControlRight (event) {
-          this.currentSummaryIndex = (this.currentSummaryIndex + 1) % (this.summaries.length - 1)
+          this.currentSummaryIndex = (this.currentSummaryIndex + 1) % (this.summaries.length)
         }
       }
     }
