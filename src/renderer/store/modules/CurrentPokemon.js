@@ -40,10 +40,29 @@ const getters = {
     const summaries = []
     if (getters.currentPokemon) {
       getters.currentPokemon.flavor_text_entries.forEach(summary => {
-        if (summary.language.name === rootState.Pokedex.currentLanguage) summaries.push(summary)
+        if (summary.language.name === rootState.Pokedex.currentLanguage) {
+          let updatedSummary = Object.assign({}, summary)
+          updatedSummary.flavor_text = updatedSummary.flavor_text.replace(/(\r\n|\n|\r|\f)/gm, ' ')
+          summaries.push(updatedSummary)
+        }
       })
     }
     return summaries
+  },
+  currentPokemonSummariesGrouped: (state, getters, rootState) => {
+    const summaries = getters.currentPokemonSummaries
+    const groupedSummaries = []
+    const groupedSummariesStr = []
+    summaries.forEach(summary => {
+      if (groupedSummariesStr.indexOf(summary.flavor_text) === -1) {
+        groupedSummariesStr.push(summary.flavor_text)
+        groupedSummaries.push({flavor_text: summary.flavor_text, versions: []})
+      }
+      const summaryIndex = groupedSummariesStr.indexOf(summary.flavor_text)
+      const version = rootState.Versions.versions[getIdFromUrl(summary.version.url)]
+      groupedSummaries[summaryIndex].versions.push(version)
+    })
+    return groupedSummaries
   },
   currentPokemonDefaultVarietyListItem: (state, getters, rootState) => {
     let defaultVariety = null

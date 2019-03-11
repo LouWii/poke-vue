@@ -13,7 +13,17 @@ const getInitialState = function () {
 
 const state = getInitialState()
 
-const getters = {}
+const getters = {
+  getVersionNameForLanguage: (state, getters, rootState) => version => {
+    let englishName = null
+    let langName = null
+    version.names.forEach(versionLanguage => {
+      if (versionLanguage.language.name === 'en') englishName = versionLanguage.name
+      if (versionLanguage.language.name === rootState.Pokedex.currentLanguage) langName = versionLanguage.name
+    })
+    return langName || englishName
+  }
+}
 
 const actions = {
   loadVersionList (context) {

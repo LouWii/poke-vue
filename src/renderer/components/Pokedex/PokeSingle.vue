@@ -9,6 +9,9 @@
     </header>
     <section class="body-wrapper">
       <div class="pokemon-single-data">
+        <div class="">
+          <poke-summary :summaries="currentPokemonSummariesGrouped"></poke-summary>
+        </div>
         <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div>
       </div>
       <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties>
@@ -18,17 +21,20 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
+  import PokeSummary from './PokeSpecies/PokeSummary'
   import PokeVarieties from './PokeVariety/PokeVarieties'
   import PokeVarietySprites from './PokeVariety/PokeVarietySprites'
 
   export default {
     name: 'poke-single',
-    components: {PokeVarieties, PokeVarietySprites},
+    components: { PokeSummary, PokeVarieties, PokeVarietySprites },
     computed: {
       ...mapGetters([
         'currentPokemon',
         'currentPokemonGenera',
         'currentPokemonName',
+        'currentPokemonSummaries',
+        'currentPokemonSummariesGrouped',
         'currentPokemonDefaultVarietyId',
         'currentPokemonVarietyIds'
       ])
