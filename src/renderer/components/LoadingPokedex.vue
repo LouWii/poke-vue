@@ -26,6 +26,12 @@
               ({{Object.keys(versions.versions).length}}/{{versions.versionsListCount}})
             </span>
           </li>
+          <li>
+            Loading version groups
+            <span v-if="versionGroups.versionGroupsListCount != 0">
+              ({{Object.keys(versionGroups.versionGroups).length}}/{{versionGroups.versionGroupsListCount}})
+            </span>
+          </li>
         </ul>
       </div>
       <div class="actions">
@@ -59,6 +65,7 @@
         pokedex: state => state.Pokedex,
         languages: state => state.Languages,
         versions: state => state.Versions,
+        versionGroups: state => state.VersionGroups,
         versionsList: state => state.Versions.versionsList,
         pokedexIsLoading: state => state.Pokedex.pokedexIsLoading,
         pokemonListIsLoading: state => state.Pokedex.pokemonListIsLoading,
@@ -71,6 +78,8 @@
         'loadApiLanguages',
         'loadVersionList',
         'loadAllVersions',
+        'loadVersionGroupsList',
+        'loadAllVersionGroups',
         'loadPokemonListNextPage',
         'resetPokedexData'
       ]),
@@ -93,6 +102,10 @@
               this.loadVersionList()
             } else if (Object.keys(this.versions.versions).length === 0) {
               this.loadAllVersions()
+            } else if (Object.keys(this.versionGroups.versionGroupsList).length === 0) {
+              this.loadVersionGroupsList()
+            } else if (Object.keys(this.versionGroups.versionGroups).length === 0) {
+              this.loadAllVersionGroups()
             }
           }
         },
@@ -126,7 +139,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     .loading-content {
       text-align: center;

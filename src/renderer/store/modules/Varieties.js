@@ -11,7 +11,52 @@ const getInitialState = () => {
 const state = getInitialState()
 
 const getters = {
-  getVariety: state => varietyId => state.varieties[varietyId]
+  getVariety: state => varietyId => state.varieties[varietyId],
+  getVarietyMovesGroupedByVersionsAndLearnMethod: (state, getters, rootState) => varietyId => {
+    const movesPerVersion = {}
+    const versionGroups = []
+    const variety = getters.getVariety(varietyId)
+    if (variety) {
+      variety.moves.forEach(
+        move => {
+          move.version_group_details.forEach(
+            versionGroupDetails => {
+              // Check if version-group exists
+              if (typeof movesPerVersion[versionGroupDetails.version_group.name] === 'undefined') {
+                const versionGroupId = getIdFromUrl(versionGroupDetails.version_group.url)
+                Vue.set(movesPerVersion, versionGroupDetails.version_group.name, {versionGroupId, learnMethods: {}})
+                versionGroups.push({versionGroupName: versionGroupDetails.version_group.name, versionGroupId})
+                // Vue.set(movesPerVersion, versionGroupId, {})
+              }
+
+              // Check if learn method exists
+              if (typeof movesPerVersion[versionGroupDetails.version_group.name].learnMethods[versionGroupDetails.move_learn_method.name] === 'undefined') {
+                const learnMethodId = getIdFromUrl(versionGroupDetails.move_learn_method.url)
+                let newLearnMethod = {}
+                newLearnMethod[versionGroupDetails.move_learn_method.name] = {moves: {}, learnMethodId}
+                Object.assign(movesPerVersion[versionGroupDetails.version_group.name].learnMethods, newLearnMethod)
+              }
+
+              let newMove = {}
+              newMove[move.move.name] = {move, level_learned_at: versionGroupDetails.level_learned_at}
+              Object.assign(
+                movesPerVersion[versionGroupDetails.version_group.name].learnMethods[versionGroupDetails.move_learn_method.name].moves,
+                newMove)
+            }
+          )
+        }
+      )
+    }
+    // Ordering gets a bit tricky as we use objects and not array, but this does the trick
+    versionGroups.sort((group1, group2) => group1.versionGroupId - group2.versionGroupId)
+    const orderedMovesPerVersion = {}
+    versionGroups.forEach(versionGroupSort => {
+      const versionGroupMoves = {}
+      versionGroupMoves[versionGroupSort.versionGroupName] = movesPerVersion[versionGroupSort.versionGroupName]
+      Object.assign(orderedMovesPerVersion, versionGroupMoves)
+    })
+    return orderedMovesPerVersion
+  }
 }
 
 const actions = {

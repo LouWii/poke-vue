@@ -8,14 +8,20 @@
       <div class=""><label>Height</label><span>{{ currentVariety.height }}</span></div>
       <div class=""><label>Weight</label><span>{{ currentVariety.height }}</span></div>
     </div>
+    <div class="moves">
+      <h4>Moves</h4>
+      <poke-moves :moves="getVarietyMovesGroupedByVersionsAndLearnMethod(pokemonVarietyId)"></poke-moves>
+    </div>
   </section>
 </template>
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
+  import PokeMoves from './PokeMoves'
 
   export default {
     name: 'poke-variety',
+    components: { PokeMoves },
     props: {
       pokemonVarietyId: {
         type: Number,
@@ -35,7 +41,7 @@
       }
     },
     computed: {
-      ...mapGetters(['getVariety']),
+      ...mapGetters(['getVariety', 'getVarietyMovesGroupedByVersionsAndLearnMethod']),
       ...{
         currentVariety: function () { return this.getVariety(this.pokemonVarietyId) }
       }

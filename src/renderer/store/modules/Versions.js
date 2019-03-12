@@ -14,6 +14,9 @@ const getInitialState = function () {
 const state = getInitialState()
 
 const getters = {
+  getVersion: state => versionId => {
+    return state.versions[versionId] || null
+  },
   getVersionNameForLanguage: (state, getters, rootState) => version => {
     let englishName = null
     let langName = null
@@ -42,7 +45,7 @@ const actions = {
         })
         context.commit('ADD_VERSIONS_TO_LIST', versions)
         context.commit('UPDATE_VERSIONS_LIST_COUNT', response.count)
-        context.commit('UPDATE_VERSIONs_LIST_IS_LOADING', false)
+        context.commit('UPDATE_VERSIONS_LIST_IS_LOADING', false)
         context.commit('UPDATE_POKEDEX_IS_LOADING', false)
       })
       .error((error) => {

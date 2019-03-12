@@ -36,9 +36,14 @@ const getters = {
     const versionsReady = (
       rootState.Versions.versionsListCount !== 0 &&
       (Object.keys(rootState.Versions.versions).length >= rootState.Versions.versionsListCount))
+    const versionGroupsReady = (
+      rootState.VersionGroups.versionGroupsListCount !== 0 &&
+      (Object.keys(rootState.VersionGroups.versionGroups).length >= rootState.VersionGroups.versionGroupsListCount)
+    )
     return pokemonListCountReady &&
       pokemonListReady &&
       versionsReady &&
+      versionGroupsReady &&
       languagesReady &&
       typeof state.pokemonList[state.pokemonListCount - 1] !== 'undefined'
   },
@@ -105,6 +110,7 @@ const actions = {
     context.commit('RESET_LANGUAGES_DATA')
     context.commit('RESET_VARIETIES_DATA')
     context.commit('RESET_VERSIONS_DATA')
+    context.commit('RESET_VERSION_GROUPS_DATA')
     context.commit('RESET_POKEDEX_DATA')
   },
   setCurrentSection (context, sectionName) {
