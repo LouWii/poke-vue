@@ -33,15 +33,16 @@ const getters = {
               if (typeof movesPerVersion[versionGroupDetails.version_group.name].learnMethods[versionGroupDetails.move_learn_method.name] === 'undefined') {
                 const learnMethodId = getIdFromUrl(versionGroupDetails.move_learn_method.url)
                 let newLearnMethod = {}
-                newLearnMethod[versionGroupDetails.move_learn_method.name] = {moves: {}, learnMethodId}
+                newLearnMethod[versionGroupDetails.move_learn_method.name] = {moves: [], learnMethodId}
                 Object.assign(movesPerVersion[versionGroupDetails.version_group.name].learnMethods, newLearnMethod)
               }
 
-              let newMove = {}
-              newMove[move.move.name] = {move, level_learned_at: versionGroupDetails.level_learned_at}
-              Object.assign(
-                movesPerVersion[versionGroupDetails.version_group.name].learnMethods[versionGroupDetails.move_learn_method.name].moves,
-                newMove)
+              // let newMove = {}
+              // newMove[move.move.name] = {move, level_learned_at: versionGroupDetails.level_learned_at}
+              // Object.assign(
+              //   movesPerVersion[versionGroupDetails.version_group.name].learnMethods[versionGroupDetails.move_learn_method.name].moves,
+              //   newMove)
+              movesPerVersion[versionGroupDetails.version_group.name].learnMethods[versionGroupDetails.move_learn_method.name].moves.push({move, level_learned_at: versionGroupDetails.level_learned_at})
             }
           )
         }

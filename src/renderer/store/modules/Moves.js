@@ -11,15 +11,19 @@ const getInitialState = () => {
 const state = getInitialState()
 
 const getters = {
-  getMove: state => moveId => state.moves[moveId]
+  getMove: state => moveId => state.moves[moveId],
+  isMoveLoading: state => moveId => state.loadingMoves.indexOf(moveId) !== -1
 }
 
 const actions = {
   loadPokemonVarietyMoves (context, pokemonVariety) {
+    let moveCount = 0
     pokemonVariety.moves.forEach((move) => {
       const moveId = getIdFromUrl(move.move.url)
       if (typeof context.state.moves[moveId] === 'undefined') {
-        context.dispatch('loadMove', moveId)
+        setTimeout(() => {
+          context.dispatch('loadMove', moveId)
+        }, moveCount * 500)
       }
     })
   },

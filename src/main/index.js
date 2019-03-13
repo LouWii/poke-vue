@@ -28,7 +28,7 @@ function createWindow () {
     maxWidth: 800,
     minHeight: 400,
     minWidth: 330,
-    useContentSize: false,
+    useContentSize: true,
     width: 450,
     webPreferences: {
       webSecurity: false // Need this for CORS
