@@ -48,6 +48,14 @@
       this.selectedVersionGroup = Object.keys(this.moves)[0]
       // console.log(Object.keys(this.moves[this.selectedVersionGroup].learnMethods))
     },
-    methods: { }
+    methods: { },
+    watch: {
+      moves: {
+        handler: function () {
+          this.selectedVersionGroup = Object.keys(this.moves)[0]
+        },
+        deep: true
+      }
+    }
   }
 </script>

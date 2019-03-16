@@ -38,6 +38,13 @@
 
 <style lang="scss">
 .machine-moves {
+  .machine-moves-wrapper {
+    &::after {
+      display: table;
+      content: "";
+      clear: both;
+    }
+  }
   .machine-move {
     float: left;
     padding: 5px 0;

@@ -1,8 +1,10 @@
 <template>
   <div v-if="summaries.length != 0" class="pokemon-summary">
-    <div class="summary">{{ currentSummary }}</div>
-    <div class="versions">
-      <span v-for="version in currentVersions" :key="version.name">{{ getVersionName(version) }}</span>
+    <div class="summary-content">
+      <div class="summary">{{ currentSummary }}</div>
+      <div class="versions">
+        <span v-for="version in currentVersions" :key="version.name">{{ getVersionName(version) }}</span>
+      </div>
     </div>
     <div class="controls">
       <button type="button" @click="onControlLeft">&lt;</button>
@@ -58,6 +60,11 @@
 
 <style lang="scss">
   .pokemon-summary {
+
+    .summary-content {
+      min-height: 80px;
+    }
+
     .versions {
       margin-top: 5px;
       text-align: right;

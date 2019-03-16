@@ -4,7 +4,7 @@
       <h4 v-if="currentVariety">{{ currentVariety.name }}</h4>
       <h4 v-else>{{ varietyTempName }}</h4>
     </header>
-    <div v-if="currentVariety">
+    <div class="variety-details" v-if="currentVariety">
       <poke-variety-sprites :varietyId="pokemonVarietyId" :displayVarietyFormMenu="true"></poke-variety-sprites>
       <div class=""><label>Height</label><span>{{ currentVariety.height }}</span></div>
       <div class=""><label>Weight</label><span>{{ currentVariety.height }}</span></div>
@@ -72,6 +72,26 @@
     header {
       h4 {
         text-transform: capitalize
+      }
+    }
+
+    .variety-details {
+      .pokemon-varieties-sprites {
+        .pokemon-variety-sprites, .pokemon-variety-sprites-nav {
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .pokemon-variety-sprites-nav {
+          button {
+            display: block;
+            margin: 0 auto 10px auto;
+            text-align: center;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
       }
     }
   }

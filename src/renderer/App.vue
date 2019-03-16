@@ -22,6 +22,18 @@
   }
 </script>
 
-<style>
-  /* CSS */
+<style lang="scss">
+  *, ::after, ::before {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  dl, ol, ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
 </style>
