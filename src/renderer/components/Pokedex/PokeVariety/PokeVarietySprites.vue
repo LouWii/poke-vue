@@ -15,22 +15,22 @@
       <button
         data-front-sprite-form="front_default"
         data-back-sprite-form="back_default"
-        v-if="currentFrontDefaultSprite"
-        @click="onSpriteFormChange">Male</button>
+        v-if="hasDefault"
+        @click="onSpriteFormChange"><span v-if="hasFemale">Male</span><span v-else>Default</span></button>
       <button
         data-front-sprite-form="front_female"
         data-back-sprite-form="back_female"
-        v-if="currentFrontFemaleSprite"
+        v-if="hasFemale"
         @click="onSpriteFormChange">Female</button>
       <button
         data-front-sprite-form="front_shiny"
         data-back-sprite-form="back_shiny"
-        v-if="currentFrontShinySprite"
-        @click="onSpriteFormChange">Shiny Male</button>
+        v-if="hasShinyDefault"
+        @click="onSpriteFormChange"><span v-if="hasFemale">Shiny Male</span><span v-else>Shiny</span></button>
       <button
         data-front-sprite-form="front_shiny_female"
         data-back-sprite-form="back_shiny_female"
-        v-if="currentFrontShinyFemaleSprite"
+        v-if="hasShinyFemale"
         @click="onSpriteFormChange">Shiny Female</button>
     </div>
   </div>
@@ -73,6 +73,18 @@
         },
         currentBackSprite: function () {
           return this.currentVariety ? this.currentVariety.sprites[this.currentSpriteFormBack] : null
+        },
+        hasDefault: function () {
+          return this.currentVariety.sprites['front_default'] !== null
+        },
+        hasFemale: function () {
+          return this.currentVariety.sprites['front_female'] !== null
+        },
+        hasShinyDefault: function () {
+          return this.currentVariety.sprites['front_shiny'] !== null
+        },
+        hasShinyFemale: function () {
+          return this.currentVariety.sprites['front_shiny_female'] !== null
         }
       }
     },
@@ -90,6 +102,11 @@
 <style lang="scss">
   .pokemon-varieties-sprites {
     .pokemon-variety-sprites {
+      img {
+        max-height: 250px;
+        max-width: 250px;
+      }
+
       .sprite-front, .sprite-back {
         display: inline-block;
         padding: 0 15px;

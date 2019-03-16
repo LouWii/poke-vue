@@ -5,6 +5,7 @@
       <h4 v-else>{{ varietyTempName }}</h4>
     </header>
     <div v-if="currentVariety">
+      <poke-variety-sprites :varietyId="pokemonVarietyId" :displayVarietyFormMenu="true"></poke-variety-sprites>
       <div class=""><label>Height</label><span>{{ currentVariety.height }}</span></div>
       <div class=""><label>Weight</label><span>{{ currentVariety.height }}</span></div>
     </div>
@@ -18,10 +19,11 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import PokeMoves from './PokeMoves'
+  import PokeVarietySprites from './PokeVarietySprites'
 
   export default {
     name: 'poke-variety',
-    components: { PokeMoves },
+    components: { PokeMoves, PokeVarietySprites },
     props: {
       pokemonVarietyId: {
         type: Number,
