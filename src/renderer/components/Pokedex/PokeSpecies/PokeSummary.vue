@@ -7,8 +7,12 @@
       </div>
     </div>
     <div class="controls">
-      <button type="button" @click="onControlLeft">&lt;</button>
-      <button type="button" @click="onControlRight">&gt;</button>
+      <button class="clear" type="button" @click="onControlLeft">
+        <font-awesome-icon icon="angle-left"/>
+      </button>
+      <button class="clear" type="button" @click="onControlRight">
+        <font-awesome-icon icon="angle-right"/>
+      </button>
     </div>
   </div>
 </template>
@@ -60,6 +64,7 @@
 
 <style lang="scss">
   .pokemon-summary {
+    margin: 25px 0 15px;
 
     .summary-content {
       min-height: 80px;
@@ -83,6 +88,12 @@
             margin-right: 5px;
           }
         }
+      }
+    }
+
+    .controls {
+      button {
+        font-size: 24px;
       }
     }
   }

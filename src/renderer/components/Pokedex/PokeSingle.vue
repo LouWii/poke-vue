@@ -5,13 +5,15 @@
       <h3>
         {{ currentPokemonName }}
       </h3>
-      <button class="close" @click="onClose">X</button>
+      <button class="close clear" @click="onClose" title="Close">
+        <font-awesome-icon icon="times"/>
+      </button>
     </header>
     <section class="body-wrapper">
       <div class="pokemon-single-data">
-        <div class="">
-          <poke-summary :summaries="currentPokemonSummariesGrouped"></poke-summary>
-        </div>
+        <hr/>
+        <poke-summary :summaries="currentPokemonSummariesGrouped"></poke-summary>
+        <hr/>
         <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div>
       </div>
       <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties>
@@ -94,7 +96,7 @@
     }
     header {
       position: relative;
-      text-align: center;
+      // text-align: center;
 
       h3, .pokemon-varieties-sprites {
         display: inline-block;
@@ -107,8 +109,8 @@
 
       .close {
         position: absolute;
-        right: 10px;
-        top: 10px;
+        right: 0px;
+        top: 0px;
       }
     }
     

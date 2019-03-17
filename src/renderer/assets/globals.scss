@@ -1,0 +1,133 @@
+/**
+ * 1. Settings
+ * 2. Fonts
+ * 3. Resets
+ * 4. Global/generic styling
+ */
+
+/*
+ --------------------
+    1. Settings
+ --------------------
+*/
+
+$pokedex-blue: #2f83b5;
+$pokedex-blue-dark: #225494;
+$pokedex-red: #a02929;
+
+$blue-lighter: #518F8F;
+$blue-light: #2E7575;
+$blue-base: #196060;
+$blue-dark: #074848;
+$blue-darker: #002E2E;
+
+$border-radius: 5px;
+$border-radius-big: 10px;
+
+$font-color: rgb(26, 26, 26);
+/*
+ --------------------
+    2. Fonts
+ --------------------
+*/
+
+@font-face {
+    font-family: 'Muli', sans-serif;
+    src: url('/static/fonts/Muli-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Muli', sans-serif;
+    src: url('/static/fonts/Muli-Italic.ttf');
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Muli', sans-serif;
+    src: url('/static/fonts/Muli-Light.ttf');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Muli', sans-serif;
+    src: url('/static/fonts/Muli-SemiBold.ttf');
+    font-weight: 600;
+    font-style: normal;
+}
+
+/*
+ --------------------
+    3. Resets
+ --------------------
+*/
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+/*
+ --------------------
+    4. Global/generic styling
+ --------------------
+*/
+
+body {
+    color: $font-color;
+    font-family: 'Muli', sans-serif;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+dl, ol, ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    cursor: default;
+    font-weight: 600;
+    user-select: none;
+}
+
+a {
+    color: $blue-light;
+}
+
+button {
+    background: #e9e9e9;
+    border: 0;
+    border-radius: $border-radius;
+    color: $font-color;
+    cursor: pointer;
+    padding: 5px;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        .svg-inline--fa {
+            color: $pokedex-blue-dark;
+        }
+    }
+
+    &.clear {
+        background: none;
+    }
+
+    &.close {
+        font-size: 26px;
+        width: 41px;
+
+        &:hover {
+            color: transparentize($font-color, 0.3);
+        }
+    }
+
+    .svg-inline--fa {
+        color: transparentize($pokedex-blue-dark, 0.2);
+    }
+}

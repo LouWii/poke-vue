@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pokedex-wrapper">
     <header class="pokedex-header">
       <div class="bubble-blue"></div>
       <div class="bubble-red"></div>
@@ -8,21 +8,22 @@
       <div class="block1"></div>
       <div class="block2"></div>
       <div class="block3"></div>
+      <button
+        type="button"
+        class="settings-trigger"
+        :class="{ active: settingsOpened }"
+        @click="onSettingsTrigger">
+        <font-awesome-icon icon="cog"/>
+      </button>
     </header>
     <main class="pokedex">
       <div class="pokedex-content-wrapper">
         <div class="pokedex-content-overlay" :class="{ active: overlayIsActive }">
           <poke-single v-if="currentPokemonId"></poke-single>
+          <poke-settings v-if="settingsOpened"></poke-settings>
         </div>
         <div class="pokedex-content">
-          <div>
-            <ul>
-              <li><button data-screen="pokemasterlist" type="button" @click="onMenuItemClick">Master List</button></li>
-              <li><button data-screen="pokesettings" type="button" @click="onMenuItemClick">Settings</button></li>
-            </ul>
-          </div>
-          <poke-master-list v-if="currentSection === 'pokemasterlist'"></poke-master-list>
-          <poke-settings v-if="currentSection === 'pokesettings'"></poke-settings>
+          <poke-master-list></poke-master-list>
         </div>
       </div>
     </main>
@@ -39,24 +40,26 @@
     name: 'pokedex',
     components: { PokeMasterList, PokeSettings, PokeSingle },
     data: function () {
-      return { }
+      return {
+        settingsOpened: false
+      }
     },
     computed: {
       ...mapState({
-        currentPokemonId: state => state.CurrentPokemon.pokemonId,
-        currentSection: state => state.Pokedex.currentSection
+        currentPokemonId: state => state.CurrentPokemon.pokemonId
       }),
       ...{
         overlayIsActive: function () {
-          return this.currentPokemonId !== null && typeof this.currentPokemonId !== 'undefined'
+          return (this.currentPokemonId !== null && typeof this.currentPokemonId !== 'undefined') ||
+            this.settingsOpened
         }
       }
     },
     methods: {
       ...mapActions(['setCurrentSection']),
       ...{
-        onMenuItemClick (event) {
-          this.setCurrentSection(event.currentTarget.getAttribute('data-screen'))
+        onSettingsTrigger: function () {
+          this.settingsOpened = !this.settingsOpened
         }
       }
     }
@@ -64,14 +67,20 @@
 </script>
 
 <style lang="scss">
+  .pokedex-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
   .pokedex-header {
-    background: #a02929;
+    background: $pokedex-red;
+    flex-shrink: 0;
     height: 100px;
     overflow: hidden;
     position: relative;
 
     .bubble-blue {
-      background: #2f83b5;
+      background: $pokedex-blue;
       border: 4px solid #fff;
       border-radius: 50%;
       height: 55px;
@@ -126,14 +135,36 @@
       left: 179px;
       width: 650px;
     }
+
+    .settings-trigger {
+      background: none;
+      border: 0;
+      
+      cursor: pointer;
+      font-size: 20px;
+      position: absolute;
+      top: 3px;
+      right: 10px;
+
+      &:hover, &.active {
+        .svg-inline--fa {
+          color: rgba(0, 0, 0, 0.70);
+        }
+      }
+
+      .svg-inline--fa {
+        color: rgba(0, 0, 0, 0.40);
+      }
+    }
   }
   .pokedex {
-    background: #a02929;
+    background: $pokedex-red;
+    flex: 2;
     padding: 10px;
   }
   .pokedex-content-wrapper {
     background: #fff;
-    border-radius: 10px;
+    border-radius: $border-radius-big;
     padding: 10px;
     position: relative;
 

@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <section class="pokemon-master-list">
     <h3>Master List</h3>
-    <div>
+    <div class="list-container">
       <ul>
         <li v-for="(pokemonId, pokemonName) in pokemonNamesList" :key="pokemonId">
           <a href="#" :data-pokemon-id="pokemonId" @click.prevent="onPokemonClick">{{ pokemonName }}</a>
@@ -30,3 +30,28 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .pokemon-master-list {
+    .list-container {
+      ul {
+        list-style: none;
+        margin: 0 10px;
+        padding: 0;
+
+        li {
+          text-transform: capitalize;
+
+          a {
+            display: block;
+            padding: 8px 4px;
+
+            &:hover {
+              background: #eee;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

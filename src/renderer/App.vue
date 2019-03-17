@@ -23,52 +23,38 @@
 </script>
 
 <style lang="scss">
-  @font-face {
-    font-family: 'Muli', sans-serif;
-    src: url('/static/fonts/Muli-Regular.ttf');
-    font-weight: 400;
-    font-style: normal;
+  .nav-tabs-navigation {
+    margin-bottom: 10px;
   }
-  @font-face {
-    font-family: 'Muli', sans-serif;
-    src: url('/static/fonts/Muli-Italic.ttf');
-    font-weight: 400;
-    font-style: italic;
-  }
-  @font-face {
-    font-family: 'Muli', sans-serif;
-    src: url('/static/fonts/Muli-Light.ttf');
-    font-weight: 300;
-    font-style: normal;
-  }
-  @font-face {
-    font-family: 'Muli', sans-serif;
-    src: url('/static/fonts/Muli-SemiBold.ttf');
-    font-weight: 600;
-    font-style: normal;
-  }
-
-  *, ::after, ::before {
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Muli', sans-serif;
-    font-weight: 400;
+  .nav-tabs {
+    list-style: none;
     margin: 0;
     padding: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+
+    .tab {
+      display: inline-block;
+      margin-right: 3px;
+
+      a {
+        background: $blue-lighter;
+        color: $blue-dark;
+        display: block;
+        padding: 5px 12px;
+        text-decoration: none;
+
+        &.active_tab {
+          background: $blue-light;
+        }
+      }
+
+    }
   }
 
-  dl, ol, ul {
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    cursor: default;
-    font-weight: 600;
-    user-select: none;
+  #app {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 </style>
