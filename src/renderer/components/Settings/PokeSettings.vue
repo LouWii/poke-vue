@@ -15,6 +15,7 @@
         <p><strong>Versions details cached:</strong> {{Object.keys(this.Versions.versions).length}}</p>
         <p><strong>Version groups details cached:</strong> {{Object.keys(this.VersionGroups.versionGroups).length}}</p>
         <p><strong>Languages available:</strong> {{Object.keys(this.Languages.apiLanguages).length}}</p>
+        <p><strong>Translated Pokemon Names:</strong> {{languagesPokemonList}}</p>
       </v-tab>
 
       <v-tab title="Debug">
@@ -38,7 +39,16 @@
     name: 'poke-landing',
     components: { },
     computed: {
-      ...mapState(['Languages', 'Pokedex', 'Varieties', 'Versions', 'VersionGroups'])
+      ...mapState(['Languages', 'Pokedex', 'Varieties', 'Versions', 'VersionGroups']),
+      ...{
+        languagesPokemonList () {
+          let listStr = ''
+          Object.keys(this.Pokedex.pokemonNames).forEach(lang => {
+            listStr += lang + ': ' + Object.keys(this.Pokedex.pokemonNames[lang]).length + '; '
+          })
+          return listStr
+        }
+      }
     },
     methods: {
       ...mapActions(['closeSettingsPanel', 'resetPokedexData']),

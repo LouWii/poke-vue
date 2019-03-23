@@ -129,7 +129,7 @@ const mutations = {
    * @param {*} pokemonPayload Object with {language: '', name: '', id: 1}
    */
   ADD_POKEMON_NAME (state, pokemonPayload) {
-    let nameLanguage = defaultLanguage
+    let nameLanguage = 'en'
     if (typeof pokemonPayload.language === 'string') {
       nameLanguage = pokemonPayload.language
     }
@@ -170,7 +170,7 @@ const mutations = {
    * @param {*} pokemonPayload Object with data {language: 'en', names: [{name: 'poke name', id: 1}]}
    */
   ADD_POKEMONS_NAME_TO_LANGUAGE (state, pokemonPayload) {
-    let nameLanguage = defaultLanguage
+    let nameLanguage = 'en'
     if (typeof pokemonPayload.language === 'string') {
       nameLanguage = pokemonPayload.language
     }
