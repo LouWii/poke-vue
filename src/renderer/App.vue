@@ -36,14 +36,16 @@
       margin-right: 3px;
 
       a {
-        background: $blue-lighter;
+        border: 1px solid transparentize($pokedex-blue,0.1);
+        border-radius: $border-radius;
         color: $blue-dark;
         display: block;
-        padding: 5px 12px;
+        padding: 5px 8px;
         text-decoration: none;
 
         &.active_tab {
-          background: $blue-light;
+          background: transparentize($pokedex-blue,0.1);
+          color: #fff;
         }
       }
 

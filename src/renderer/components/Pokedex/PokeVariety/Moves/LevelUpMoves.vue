@@ -1,6 +1,6 @@
 <template>
   <div class="level-up-moves">
-    <h4>Level-Up</h4>
+    <h4 v-if="showTitle">Level-Up</h4>
     <div class="level-up-move header">
       <div class="level">Level</div>
       <div class="move">Move</div>
@@ -22,6 +22,10 @@
       moves: {
         required: true,
         validator: value => { return typeof value === 'undefined' || value === null || Array.isArray(value) }
+      },
+      showTitle: {
+        type: Boolean,
+        default: true
       }
     },
     computed: {
@@ -32,7 +36,7 @@
       }
     },
     mounted: function () {
-      console.log(this.moves)
+      // console.log(this.moves)
     }
   }
 </script>

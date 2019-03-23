@@ -1,6 +1,6 @@
 <template>
   <div class="machine-moves">
-    <h4>Machine</h4>
+    <h4 v-if="showTitle">Machine</h4>
     <!-- TODO: add filtering -->
     <div class="machine-moves-wrapper">
       <div
@@ -20,6 +20,10 @@
       moves: {
         required: true,
         validator: value => { return typeof value === 'undefined' || value === null || Array.isArray(value) }
+      },
+      showTitle: {
+        type: Boolean,
+        default: true
       }
     },
     computed: {
@@ -31,7 +35,7 @@
       }
     },
     mounted: function () {
-      console.log(this.moves)
+      // console.log(this.moves)
     }
   }
 </script>
