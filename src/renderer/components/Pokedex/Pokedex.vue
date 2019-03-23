@@ -40,13 +40,12 @@
     name: 'pokedex',
     components: { PokeMasterList, PokeSettings, PokeSingle },
     data: function () {
-      return {
-        settingsOpened: false
-      }
+      return { }
     },
     computed: {
       ...mapState({
-        currentPokemonId: state => state.CurrentPokemon.pokemonId
+        currentPokemonId: state => state.CurrentPokemon.pokemonId,
+        settingsOpened: state => state.Settings.settingsPanelOpen
       }),
       ...{
         overlayIsActive: function () {
@@ -56,10 +55,10 @@
       }
     },
     methods: {
-      ...mapActions(['setCurrentSection']),
+      ...mapActions(['setCurrentSection', 'triggerSettingsPanel']),
       ...{
         onSettingsTrigger: function () {
-          this.settingsOpened = !this.settingsOpened
+          this.triggerSettingsPanel()
         }
       }
     }

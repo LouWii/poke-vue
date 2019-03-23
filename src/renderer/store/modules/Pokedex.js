@@ -3,11 +3,8 @@ import pokeApi, {getIdFromUrl} from '../../services/pokedex-api'
 
 const cloneDeep = require('lodash.clonedeep')
 
-const defaultLanguage = 'en'
-
 const getInitialState = () => {
   return {
-    currentLanguage: defaultLanguage,
     currentSection: '',
     loadingPokedexConfirmed: false,
     pokemons: [],
@@ -26,7 +23,7 @@ const getInitialState = () => {
 const state = cloneDeep(getInitialState())
 
 const getters = {
-  pokemonNamesList: state => state.pokemonNames[state.currentLanguage] ? state.pokemonNames[state.currentLanguage] : [],
+  pokemonNamesList: (state, getters, rootState) => state.pokemonNames[rootState.Settings.userLanguage] ? state.pokemonNames[rootState.Settings.userLanguage] : [],
   nbPokemonsInList: state => Object.keys(state.pokemonList).length,
   pokedexReadyToConfirm: (state, getters, rootState) => {
     // Cheating Vue to force it to properly update the getter by creating vars

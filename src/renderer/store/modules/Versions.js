@@ -22,7 +22,7 @@ const getters = {
     let langName = null
     version.names.forEach(versionLanguage => {
       if (versionLanguage.language.name === 'en') englishName = versionLanguage.name
-      if (versionLanguage.language.name === rootState.Pokedex.currentLanguage) langName = versionLanguage.name
+      if (versionLanguage.language.name === rootState.Settings.userLanguage) langName = versionLanguage.name
     })
     return langName || englishName
   }

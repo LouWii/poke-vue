@@ -16,7 +16,7 @@ const getters = {
     let generaStr = null
     if (getters.currentPokemon) {
       getters.currentPokemon.genera.forEach(genera => {
-        if (genera.language.name === rootState.Pokedex.currentLanguage) generaStr = genera.genus
+        if (genera.language.name === rootState.Settings.userLanguage) generaStr = genera.genus
       })
     }
     return generaStr
@@ -24,23 +24,23 @@ const getters = {
   currentPokemonName: (state, getters, rootState) => {
     if (state.pokemonId === null) return null
 
-    if (rootState.Pokedex.currentLanguage === 'en') {
+    if (rootState.Settings.userLanguage === 'en') {
       return rootState.Pokedex.pokemonList[state.pokemonId].name
     }
 
     // Look for the name in the correct language in object
-    Object.keys(rootState.Pokedex.pokemonNames[rootState.Pokedex.currentLanguage]).forEach((pokemonLangName) => {
-      if (rootState.Pokedex.pokemonNames[rootState.Pokedex.currentLanguage][pokemonLangName] === state.pokemonId) return pokemonLangName
+    Object.keys(rootState.Pokedex.pokemonNames[rootState.Settings.userLanguage]).forEach((pokemonLangName) => {
+      if (rootState.Pokedex.pokemonNames[rootState.Settings.userLanguage][pokemonLangName] === state.pokemonId) return pokemonLangName
     })
 
-    console.error('Pokemon ' + state.pokemonId + ' not found for lang ' + rootState.Pokedex.currentLanguage)
+    console.error('Pokemon ' + state.pokemonId + ' not found for lang ' + rootState.Settings.userLanguage)
     return null
   },
   currentPokemonSummaries: (state, getters, rootState) => {
     const summaries = []
     if (getters.currentPokemon) {
       getters.currentPokemon.flavor_text_entries.forEach(summary => {
-        if (summary.language.name === rootState.Pokedex.currentLanguage) {
+        if (summary.language.name === rootState.Settings.userLanguage) {
           let updatedSummary = Object.assign({}, summary)
           updatedSummary.flavor_text = updatedSummary.flavor_text.replace(/(\r\n|\n|\r|\f)/gm, ' ')
           summaries.push(updatedSummary)

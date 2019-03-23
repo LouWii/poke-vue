@@ -1,8 +1,11 @@
 <template>
-  <section class="pokevue-container">
+  <section class="pokedex-settings">
+    <button class="close clear" @click="onCloseSettings" title="Close">
+      <font-awesome-icon icon="times"/>
+    </button>
     <vue-tabs>
       <v-tab title="General">
-       <label>Language</label>
+        <label>Language</label>
       </v-tab>
 
       <v-tab title="Stats">
@@ -38,8 +41,11 @@
       ...mapState(['Languages', 'Pokedex', 'Varieties', 'Versions', 'VersionGroups'])
     },
     methods: {
-      ...mapActions(['resetPokedexData']),
+      ...mapActions(['closeSettingsPanel', 'resetPokedexData']),
       ...{
+        onCloseSettings () {
+          this.closeSettingsPanel()
+        },
         onDumpLanguages () {
           console.log(this.Languages.apiLanguages)
         },
@@ -70,5 +76,11 @@
 </script>
 
 <style lang="scss">
-
+  .pokedex-settings {
+    .close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  }
 </style>
