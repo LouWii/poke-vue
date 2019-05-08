@@ -25,6 +25,8 @@ npm run lint
 
 ```
 
+Linux requires `libgconf-2-4`, run `apt-get install libgconf-2-4` (Ubuntu etc..) or `sudo pacman -S gconf` (Arch Linux...)
+
 ## Licence
 
 MIT Copyright 2019 Louwii

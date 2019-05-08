@@ -48,7 +48,7 @@ const actions = {
         context.commit('UPDATE_VERSIONS_LIST_IS_LOADING', false)
         context.commit('UPDATE_POKEDEX_IS_LOADING', false)
       })
-      .error((error) => {
+      .catch((error) => {
         console.error(error)
         context.commit('UPDATE_VERSIONS_LIST_IS_LOADING', false)
         context.commit('UPDATE_POKEDEX_IS_LOADING', false)
