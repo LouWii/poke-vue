@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import sqlite3 from 'sqlite3'
-import { reject } from 'q';
 
-const pokeDb = new sqlite3.Database('db.sqlite3')
+import modules from './modules'
+
+import pokeDb from '@/database'
 
 pokeDb.all('SELECT * FROM pokemon_v2_ability LIMIT 3', (error, rows) => {
   if (error) {
@@ -34,5 +34,7 @@ export default new Vuex.Store({
       })
       
     }
-  }
+  },
+  modules,
+  strict: process.env.NODE_ENV !== 'production'
 })

@@ -1,0 +1,28 @@
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+body {
+    color: $font-color;
+    font-family: 'Muli', sans-serif;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+dl, ol, ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    cursor: default;
+    font-weight: 600;
+    user-select: none;
+}
+
+a {
+    color: $blue-light;
+}
