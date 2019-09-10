@@ -25,16 +25,16 @@
       }
     },
     mounted: function() {
-      this.getPokemons()
-      .then(rows => {
-        this.pokemonList = rows
-      })
-      .catch(error => {
-        console.error(error)
-      })
+      this.getPokemonsSpecies()
+        .then(rows => {
+          this.pokemonList = rows
+        })
+        .catch(error => {
+          console.error(error)
+        })
     },
     methods: {
-      ...mapActions(['getPokemons']),
+      ...mapActions(['getPokemonsSpecies']),
       ...{
         onPokemonClick (event) {
           this.showPokemon(event.currentTarget.getAttribute('data-pokemon-id'))

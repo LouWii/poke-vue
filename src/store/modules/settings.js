@@ -1,4 +1,4 @@
-const defaultLanguage = 1
+const defaultLanguage = 5
 
 const getInitialState = () => {
   return {
@@ -12,11 +12,15 @@ const state = getInitialState()
 const getters = {}
 
 const actions = {
-  
+  setUserLanguage(context, languageId) {
+    context.commit('SET_USER_LANGUAGE', languageId)
+  }
 }
 
 const mutations = {
-  
+  SET_USER_LANGUAGE (state, languageId) {
+    state.userLanguage = languageId
+  }
 }
 
 export default {

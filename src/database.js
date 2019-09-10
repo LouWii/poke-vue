@@ -4,5 +4,8 @@ const pokeDb = new sqlite3.Database('db.sqlite3')
 
 export default pokeDb
 
-export const dbtablePokemonSpecies = 'pokemon_v2_pokemonspecies'
-export const dbtablePokemonSpeciesName = 'pokemon_v2_pokemonspeciesname'
+const dbTablePrefix = 'pokemon_v2_'
+export const dbtablePokemon            = dbTablePrefix + 'pokemon'
+export const dbtablePokemonForm        = dbTablePrefix + 'pokemonform'
+export const dbtablePokemonSpecies     = dbTablePrefix + 'pokemonspecies'
+export const dbtablePokemonSpeciesName = dbTablePrefix + 'pokemonspeciesname'
