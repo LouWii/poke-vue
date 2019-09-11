@@ -26,8 +26,10 @@ export default {
   components: {InlineList},
   props: {
     speciesId: {
-      type: Number,
-      required: true
+      required: true,
+      validator: value => {
+        return !isNaN(value)
+      }
     }
   },
   data: () => {

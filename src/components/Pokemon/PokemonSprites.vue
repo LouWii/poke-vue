@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
   name: 'PokemonSprites',
   props: {
@@ -56,11 +58,62 @@ export default {
   data: function () {
     return {
       currentSpriteFormFront: 'front_default',
-      currentSpriteFormBack: 'back_default'
+      currentSpriteFormBack: 'back_default',
+      defaultSpritFormFront: 'front_default',
+      defaultSpritFormBack: 'back_default',
+      sprites: null,
     }
   },
+  beforeMount: function() {
+    this.fetchSprites()
+  },
   computed: {
-    
+    currentFrontSprite: function () {
+      return this.sprites && this.sprites[this.currentSpriteFormFront] ? this.getSpriteUrl(this.sprites[this.currentSpriteFormFront]) : null
+    },
+    currentBackSprite: function () {
+      return this.sprites && this.sprites[this.currentSpriteFormBack] ? this.getSpriteUrl(this.sprites[this.currentSpriteFormBack]) : null
+    },
+    hasDefault: function () {
+      return this.sprites && this.sprites['front_default'] !== null
+    },
+    hasFemale: function () {
+      return this.sprites && this.sprites['front_female'] !== null
+    },
+    hasShinyDefault: function () {
+      return this.sprites && this.sprites['front_shiny'] !== null
+    },
+    hasShinyFemale: function () {
+      return this.sprites && this.sprites['front_shiny_female'] !== null
+    }
+  },
+  methods: {
+    ...mapActions(['getPokemonSprites']),
+    fetchSprites() {
+      this.getPokemonSprites(this.varietyId)
+        .then(rows => {
+          this.sprites = JSON.parse(rows.sprites)
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    getSpriteUrl(spritePath) {
+      return 'https://raw.githubusercontent.com/PokeAPI/sprites/master' + spritePath.replace('/media', '')
+    },
+    onSpriteFormChange: function (event) {
+      this.currentSpriteFormFront = event.currentTarget.getAttribute('data-front-sprite-form')
+      this.currentSpriteFormBack = event.currentTarget.getAttribute('data-back-sprite-form')
+    }
+  },
+  watch: {
+    varietyId: {
+      handler: function(newVarietyId) {
+        this.currentSpriteFormFront = this.defaultSpritFormFront
+        this.currentSpriteFormBack = this.defaultSpritFormBack
+        this.fetchSprites()
+      }
+    }
   }
 }
 </script>

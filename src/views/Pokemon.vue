@@ -1,6 +1,7 @@
 <template>
   <div class="pokemon">
     <header v-if="pokemonSpecies">
+      <!-- Need to fetch the default variety for the Species and then display the default front sprite -->
       <!-- <poke-variety-sprites :varietyId="currentPokemonDefaultVarietyId" :displayFrontOnly="true"></poke-variety-sprites> -->
       <h3>
         <translated-name :pokemon="pokemonSpecies"/>
@@ -13,11 +14,11 @@
       <div class="pokemon-single-data">
         <hr/>
         <translated-summary :speciesId="$route.params.id"/>
-        <!-- <poke-summary :summaries="currentPokemonSummariesGrouped"></poke-summary> -->
         <hr/>
         <!-- <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div> -->
       </div>
       <!-- <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties> -->
+      <varieties :speciesId="$route.params.id"/>
     </section>
   </div>
 </template>
@@ -26,10 +27,11 @@
 import { mapActions } from 'vuex'
 import TranslatedSummary from '@/components/Pokemon/TranslatedSummary'
 import TranslatedName from '@/components/Pokemon/TranslatedName'
+import Varieties from '@/components/Pokemon/Varieties'
 
 export default {
   name: 'Pokemon',
-  components: {TranslatedSummary, TranslatedName},
+  components: {TranslatedSummary, TranslatedName, Varieties},
   data: () => {
     return {
       pokemon: null,
@@ -39,7 +41,6 @@ export default {
   beforeMount: function() {
     this.getPokemonSpecies(this.$route.params.id)
     .then(row => {
-      console.log(row)
       this.pokemonSpecies = row
     })
     .catch(error => {

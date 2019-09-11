@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import pokeDb from '@/database'
 import * as db from '@/database'
+import {buildQueryFilter} from '@/utils/query'
 
 const getInitialState = () => {
   return {
@@ -24,12 +25,38 @@ const actions = {
       {$langId: rootState.settings.userLanguage}
     )
   },
-  getPokemons({rootState}) {
+  getPokemons({rootState}, payload) {
     return new Promise((resolve, reject) => {
+      let queryParameters = {}
+      let extraConditions = ''
+      if (payload.filters) {
+        let result = buildQueryFilter(payload.filters)
+        queryParameters = Object.assign({}, result.queryParameters)
+        if (result.query.length) {
+          extraConditions += ' WHERE (' + result.query + ')'
+        }
+      }
       pokeDb.all(
         `SELECT p.* FROM ${db.dbtablePokemon} AS p
-        ORDER BY s."order" ASC`,
-        {$langId: rootState.settings.userLanguage},
+        ${extraConditions}
+        ORDER BY p."order" ASC`,
+        queryParameters,
+        (error, rows) => {
+          if (error) {
+            reject(error)
+          } else {
+            resolve(rows)
+          }
+        }
+      )
+    })
+  },
+  getPokemonSprites(context, pokemonId) {
+    return new Promise((resolve, reject) => {
+      pokeDb.get(
+        `SELECT s.* FROM ${db.dbtablePokemonSprites} AS s 
+        WHERE s.pokemon_id = $id`,
+        {$id: pokemonId},
         (error, rows) => {
           if (error) {
             reject(error)
