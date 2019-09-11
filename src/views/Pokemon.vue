@@ -3,7 +3,7 @@
     <header v-if="pokemonSpecies">
       <!-- <poke-variety-sprites :varietyId="currentPokemonDefaultVarietyId" :displayFrontOnly="true"></poke-variety-sprites> -->
       <h3>
-        {{ pokemonSpecies.name }}
+        <translated-name :pokemon="pokemonSpecies"/>
       </h3>
       <button class="close clear" @click="onClose" title="Close">
         <!-- <font-awesome-icon icon="times"/> --> X
@@ -12,6 +12,7 @@
     <section class="body-wrapper" v-if="pokemonSpecies">
       <div class="pokemon-single-data">
         <hr/>
+        <translated-summary :speciesId="$route.params.id"/>
         <!-- <poke-summary :summaries="currentPokemonSummariesGrouped"></poke-summary> -->
         <hr/>
         <!-- <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div> -->
@@ -23,16 +24,19 @@
 
 <script>
 import { mapActions } from 'vuex'
+import TranslatedSummary from '@/components/Pokemon/TranslatedSummary'
+import TranslatedName from '@/components/Pokemon/TranslatedName'
 
 export default {
   name: 'Pokemon',
-  data: function() {
+  components: {TranslatedSummary, TranslatedName},
+  data: () => {
     return {
       pokemon: null,
       pokemonSpecies: null,
     }
   },
-  mounted: function() {
+  beforeMount: function() {
     this.getPokemonSpecies(this.$route.params.id)
     .then(row => {
       console.log(row)

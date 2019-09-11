@@ -5,8 +5,8 @@
       <ul>
         <li v-for="pokemon in pokemonList" :key="pokemon.id">
           <router-link :to="{name: 'pokemon', params: {id: pokemon.id}}">
-            {{ pokemon.name }}
-            </router-link>
+            <translated-name :pokemon="pokemon"/>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -16,15 +16,17 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
+  import TranslatedName from '@/components/Pokemon/TranslatedName'
+
   export default {
     name: 'poke-master-list',
-    components: { },
+    components: {TranslatedName},
     data: function() {
       return {
         pokemonList: []
       }
     },
-    mounted: function() {
+    beforeMount: function() {
       this.getPokemonsSpecies()
         .then(rows => {
           this.pokemonList = rows

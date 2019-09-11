@@ -1,8 +1,10 @@
 const defaultLanguage = 5
+const englishLanguage = 9
 
 const getInitialState = () => {
   return {
     defaultLanguage,
+    englishLanguage,
     userLanguage: defaultLanguage
   }
 }
