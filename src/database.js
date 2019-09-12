@@ -8,6 +8,8 @@ const dbTablePrefix = 'pokemon_v2_'
 export const dbtablePokemon                   = dbTablePrefix + 'pokemon'
 // Only 20 pkmn have more than 1 form
 export const dbtablePokemonForm               = dbTablePrefix + 'pokemonform'
+export const dbtableGeneration                = dbTablePrefix + 'generation'
+export const dbtableGenerationName            = dbTablePrefix + 'generationname'
 export const dbtablePokemonSpecies            = dbTablePrefix + 'pokemonspecies'
 export const dbtablePokemonSpeciesDescription = dbTablePrefix + 'pokemonspeciesdescription'
 export const dbtablePokemonSpeciesFlavorText  = dbTablePrefix + 'pokemonspeciesflavortext'

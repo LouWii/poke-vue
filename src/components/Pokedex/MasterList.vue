@@ -1,7 +1,8 @@
 <template>
   <section class="pokemon-master-list">
-    <h3>Master List</h3>
+    <h3>Pokémons</h3>
     <div class="filters-wrapper">
+      <generations-dropdown/>
       <search-field/>
     </div>
     <div class="list-container">
@@ -16,15 +17,15 @@
   </section>
 </template>
 
-
 <script>
-  import { mapActions, mapGetters, mapState } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
+  import GenerationsDropdown from '@/components/List/GenerationsDropdown'
   import SearchField from '@/components/List/SearchField'
   import TranslatedName from '@/components/Pokemon/TranslatedName'
 
   export default {
     name: 'poke-master-list',
-    components: {SearchField, TranslatedName},
+    components: {GenerationsDropdown, SearchField, TranslatedName},
     data: function() {
       return {
         pokemonList: []

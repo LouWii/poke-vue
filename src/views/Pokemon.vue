@@ -40,12 +40,12 @@ export default {
   },
   beforeMount: function() {
     this.getPokemonSpecies(this.$route.params.id)
-    .then(row => {
-      this.pokemonSpecies = row
-    })
-    .catch(error => {
-      console.error(error)
-    })
+      .then(row => {
+        this.pokemonSpecies = row
+      })
+      .catch(error => {
+        console.error(error)
+      })
   },
   methods: {
     ...mapActions(['getPokemonSpecies']),
