@@ -1,0 +1,20 @@
+input {
+    color: $font-color;
+    font-size: 16px;
+
+    &[type="text"] {
+        background: $input-background;
+        border: 0;
+        border-bottom: $input-border-width solid $input-border-color;
+        padding: 5px;
+    }
+}
+
+.input-with-reset {
+    position: relative;
+
+    button {
+        position: absolute;
+        right: 0;
+    }
+}

@@ -6,12 +6,17 @@ import {buildQueryFilter} from '@/utils/query'
 const getInitialState = () => {
   return {
     versions: [],
+    species: [],
   }
 }
 
 const state = getInitialState()
 
-const getters = {}
+const getters = {
+  allSpecies: state => {
+    return state.species
+  }
+}
 
 const actions = {
   /**
@@ -67,22 +72,27 @@ const actions = {
       )
     })
   },
-  getPokemonsSpecies({rootState}) {
+  getPokemonsSpecies({commit, rootState}) {
     return new Promise((resolve, reject) => {
-      pokeDb.all(
-        `SELECT s.*, n.name AS t_name FROM ${db.dbtablePokemonSpecies} AS s 
-        LEFT OUTER JOIN ${db.dbtablePokemonSpeciesName} AS n ON n.pokemon_species_id = s.id
-        WHERE n.language_id = $langId
-        ORDER BY s."order" ASC`,
-        {$langId: rootState.settings.userLanguage},
-        (error, rows) => {
-          if (error) {
-            reject(error)
-          } else {
-            resolve(rows)
+      if (rootState.pokemon.species.length) {
+        resolve(rootState.pokemon.species)
+      } else {
+        pokeDb.all(
+          `SELECT s.*, n.name AS t_name FROM ${db.dbtablePokemonSpecies} AS s 
+          LEFT OUTER JOIN ${db.dbtablePokemonSpeciesName} AS n ON n.pokemon_species_id = s.id
+          WHERE n.language_id = $langId
+          ORDER BY s."order" ASC`,
+          {$langId: rootState.settings.userLanguage},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('SET_SPECIES', rows)
+              resolve(rows)
+            }
           }
-        }
-      )
+        )
+      }
     })
   },
   getPokemonSpecies({rootState}, speciesId) {
@@ -160,6 +170,9 @@ const actions = {
 }
 
 const mutations = {
+  SET_SPECIES(state, species) {
+    Vue.set(state, 'species', species)
+  },
   SET_VERSIONS(state, versions) {
     Vue.set(state, 'versions', versions)
   }

@@ -1,9 +1,12 @@
 <template>
   <section class="pokemon-master-list">
     <h3>Master List</h3>
+    <div class="filters-wrapper">
+      <search-field/>
+    </div>
     <div class="list-container">
       <ul>
-        <li v-for="pokemon in pokemonList" :key="pokemon.id">
+        <li v-for="pokemon in getFilteredSpecies" :key="pokemon.id">
           <router-link :to="{name: 'pokemon', params: {id: pokemon.id}}">
             <translated-name :pokemon="pokemon"/>
           </router-link>
@@ -15,12 +18,13 @@
 
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapState } from 'vuex'
+  import SearchField from '@/components/List/SearchField'
   import TranslatedName from '@/components/Pokemon/TranslatedName'
 
   export default {
     name: 'poke-master-list',
-    components: {TranslatedName},
+    components: {SearchField, TranslatedName},
     data: function() {
       return {
         pokemonList: []
@@ -34,6 +38,9 @@
         .catch(error => {
           console.error(error)
         })
+    },
+    computed: {
+      ...mapGetters(['getFilteredSpecies']),
     },
     methods: {
       ...mapActions(['getPokemonsSpecies']),
@@ -64,6 +71,10 @@
           }
         }
       }
+    }
+
+    .filters-wrapper {
+      margin: 1rem 0;
     }
   }
 </style>
