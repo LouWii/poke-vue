@@ -3,7 +3,7 @@
     <select v-model="selectedGenerationId">
       <option value="">All</option>
       <option v-for="generation in allGenerations" :key="generation.id" :value="generation.id">
-        {{generation.t_name}}
+        {{generation.t_name}} ({{getGenerationVersionsString(generation.id)}})
       </option>
     </select>
   </div>
@@ -11,6 +11,7 @@
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
+import { setTimeout } from 'timers';
 
 export default {
   name: 'GenerationsDropdown',
@@ -20,19 +21,29 @@ export default {
     }
   },
   beforeMount: function() {
-    if (!this.allGenerations || this.allGenerations.length == 0) {
+    if (!this.allGenerations || this.allGenerations.length === 0) {
       this.getGenerations()
     }
+    if (!this.allGenerationsVersionIds || this.allGenerationsVersionIds.length === 0) {
+      this.getGenerationsVersions()
+    }
     this.selectedGenerationId = this.storeSelectedGenerationId
+
+    setTimeout(function(){
+      console.log(this.generationVersionsName(1))
+    }.bind(this), 2000)
   },
   computed: {
-    ...mapGetters(['allGenerations']),
+    ...mapGetters(['allGenerations', 'allGenerationsVersionIds', 'generationVersionsName']),
     ...mapState({
       storeSelectedGenerationId: state => state.pokemonList.generationId
-    })
+    }),
   },
   methods: {
-    ...mapActions(['getGenerations', 'setPokemonListGenerationId'])
+    ...mapActions(['getGenerations', 'getGenerationsVersions', 'setPokemonListGenerationId']),
+    getGenerationVersionsString(generationId) {
+      return this.generationVersionsName(generationId).join(', ')
+    }
   },
   watch: {
     selectedGenerationId: {

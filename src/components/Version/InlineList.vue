@@ -1,6 +1,6 @@
 <template>
   <span v-if="versionIds.length > 0" class="version-inline-list">
-    <span v-for="version in versions" :key="version.id">{{ version.t_name }}</span>
+    <span v-for="version in versions" :key="version.id">{{ version.t_name||version.name }}</span>
   </span>
 </template>
 

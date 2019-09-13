@@ -10,6 +10,10 @@ input {
     }
 }
 
+select {
+    max-width: 100%;
+}
+
 .input-with-reset {
     position: relative;
 

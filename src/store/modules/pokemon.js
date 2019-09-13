@@ -8,18 +8,30 @@ const getInitialState = () => {
     generations: [], // Contains ALL generations, or none
     species: [], // Contains ALL species, or none
     versions: [], // Contains ALL versions, or none
+    generationsVersionIds: [], // Contains ALL version Ids for all generation Ids
   }
 }
 
 const state = getInitialState()
 
 const getters = {
-  allGenerations: state => {
-    return state.generations
-  },
-  allSpecies: state => {
-    return state.species
-  },
+  allGenerations: state => state.generations,
+  allGenerationsVersionIds: state => state.generationsVersionIds,
+  allSpecies: state => state.species,
+  allVersions: state => state.versions,
+  versionsFromVersionGroup: state => versionGroupId => state.versions.filter(version => version.version_group_id === versionGroupId),
+  generationVersionsName: state => generationId => {
+    const versionsName = []
+    if (state.generationsVersionIds[generationId]) {
+      state.generationsVersionIds[generationId]
+        .forEach(
+          vId => versionsName.push(
+            state.versions.find(curV => curV.id === vId).t_name
+          )
+        )
+    }
+    return versionsName
+  }
 }
 
 const actions = {
@@ -44,6 +56,34 @@ const actions = {
           }
         )
       }
+    })
+  },
+  getGenerationsVersions({commit, dispatch, getters}) {
+    return new Promise((resolve, reject) => {
+      // Fetch all versions before doing anything
+      dispatch('getVersions')
+        .then(function() {
+          pokeDb.all(
+            `SELECT g.* FROM ${db.dbtablePokemonVersionGroup} AS g
+            ORDER BY g."order"`,
+            {},
+            (error, rows) => {
+              if (error) {
+                reject(error)
+              } else {
+                const generationsVersionIds = []
+                rows.forEach(row => {
+                  if (!generationsVersionIds[row.generation_id]) {
+                    generationsVersionIds[row.generation_id] = []
+                  }
+                  // Find the versions from that gen
+                  getters.versionsFromVersionGroup(row.id).forEach(version => generationsVersionIds[row.generation_id].push(version.id))
+                })
+                commit('SET_GENERATIONS_VERSIONS_IDS', generationsVersionIds)
+              }
+            }
+          )
+        })
     })
   },
   /**
@@ -106,8 +146,8 @@ const actions = {
       } else {
         pokeDb.all(
           `SELECT s.*, n.name AS t_name FROM ${db.dbtablePokemonSpecies} AS s 
-          LEFT OUTER JOIN ${db.dbtablePokemonSpeciesName} AS n ON n.pokemon_species_id = s.id
-          WHERE n.language_id = $langId
+          LEFT OUTER JOIN ${db.dbtablePokemonSpeciesName} AS n
+          ON n.pokemon_species_id = s.id AND (n.language_id = $langId OR n.language_id IS NULL)
           ORDER BY s."order" ASC`,
           {$langId: rootState.settings.userLanguage},
           (error, rows) => {
@@ -129,8 +169,9 @@ const actions = {
       } else {
         pokeDb.get(
           `SELECT s.*, n.name AS t_name FROM ${db.dbtablePokemonSpecies} AS s 
-          LEFT OUTER JOIN ${db.dbtablePokemonSpeciesName} AS n ON n.pokemon_species_id = s.id
-          WHERE n.language_id = $langId AND s.id = $id`,
+          LEFT OUTER JOIN ${db.dbtablePokemonSpeciesName} AS n
+          ON n.pokemon_species_id = s.id AND (n.language_id = $langId or n.language_id IS NULL)
+          WHERE s.id = $id`,
           {$langId: rootState.settings.userLanguage, $id: speciesId},
           (error, rows) => {
             if (error) {
@@ -172,23 +213,24 @@ const actions = {
   getVersions({commit, rootState}, payload) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.versions.length) {
-        if (payload.ids) {
+        if (payload && payload.ids) {
           resolve(rootState.pokemon.versions.filter(curV => ~payload.ids.indexOf(curV.id)))
         } else {
           resolve(rootState.pokemon.versions)
         }
       } else {
         pokeDb.all(
+          // BUG: should fetch english name if translation doesn't exist
           `SELECT v.*, n.name AS t_name FROM ${db.dbtablePokemonVersion} AS v
-          LEFT OUTER JOIN ${db.dbtablePokemonVersionName} AS n ON v.id = n.version_id
-          WHERE n.language_id = $langId`,
+          LEFT OUTER JOIN ${db.dbtablePokemonVersionName} AS n 
+          ON v.id = n.version_id AND (n.language_id = $langId OR n.language_id IS NULL)`,
           {$langId: rootState.settings.userLanguage},
           (error, rows) => {
             if (error) {
               reject(error)
             } else {
               commit('SET_VERSIONS', rows)
-              if (payload.ids) {
+              if (payload && payload.ids) {
                 resolve(rows.filter(curV => ~payload.ids.indexOf(curV.id)))
               } else {
                 resolve(rows)
@@ -204,6 +246,9 @@ const actions = {
 const mutations = {
   SET_GENERATIONS(state, generations) {
     Vue.set(state, 'generations', generations)
+  },
+  SET_GENERATIONS_VERSIONS_IDS(state, generationsVersionIds) {
+    Vue.set(state, 'generationsVersionIds', generationsVersionIds)
   },
   SET_SPECIES(state, species) {
     Vue.set(state, 'species', species)
