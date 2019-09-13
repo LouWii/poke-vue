@@ -43,7 +43,7 @@ export default {
             function() {
               this.setPokemonListKeywords(keywords)
             }.bind(this),
-            350
+            300
           )
         }
       }

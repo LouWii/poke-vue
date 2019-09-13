@@ -1,0 +1,91 @@
+<template>
+  <div class="variety-moves">
+    <div class="version-group-selector">
+      <select v-model="selectedVersionGroup">
+        <!-- <option
+          v-for="(move, moveIndex) in Object.keys(moves)"
+          :key="moveIndex"
+          :value="move">
+          {{ getVersionGroupNamesForLanguageFromVersionGroupId(moves[move].versionGroupId).join(', ') }}
+        </option> -->
+        <option v-for="versionGroup in versionGroups" :key="versionGroup.versionGroupId" :value="versionGroup.versionGroupId">
+          {{versionGroup.versionsStr}}
+        </option>
+      </select>
+    </div>
+    <moves-by-type v-if="selectedVersionGroup" :pokemonMoves="selectedMoves" />
+  </div>
+</template>
+
+<script>
+import {mapActions, mapGetters} from 'vuex'
+import MovesByType from '@/components/Pokemon/MovesByType'
+
+export default {
+  name: 'VarietyMoves',
+  components: {MovesByType},
+  data: () => {
+    return {
+      selectedVersionGroup: null,
+      versionGroups: [],
+    }
+  },
+  props: {
+    varietyId: {
+      required: true,
+
+    }
+  },
+  beforeMount: function() {
+    if (!this.allVersions || this.allVersions.length === 0) {
+      this.getVersions().then(function(){
+        this.initVersionsDropdown()
+      }.bind(this))
+    } else {
+      this.initVersionsDropdown()
+    }
+
+
+  },
+  computed: {
+    ...mapGetters(['allVersions', 'pokemonMoves', 'versionsFromVersionGroup']),
+    selectedMoves: function() {
+      return this
+        .pokemonMoves(this.varietyId)
+        .filter(pkMove => pkMove.version_group_id === this.selectedVersionGroup)
+    }
+  },
+  methods: {
+    ...mapActions(['getVersions']),
+    initVersionsDropdown() {
+      const versionGroupIds = this.getPokemonMovesVersionGroups()
+      let versionGroups = []
+      let minVersionGroupId = null
+      versionGroupIds.forEach(vgId => {
+        if (!minVersionGroupId) minVersionGroupId = vgId
+        versionGroups.push({
+          versionGroupId: vgId,
+          versionsStr: this.versionsFromVersionGroup(vgId).map(v => v.t_name||v.name).join(', ')
+        })
+      })
+      this.versionGroups = versionGroups
+      this.selectedVersionGroup = minVersionGroupId
+    },
+    getPokemonMovesVersionGroups() {
+      const versionGroupIds = []
+      this.pokemonMoves(this.varietyId).forEach(pkMove => {
+        if (-1 === versionGroupIds.indexOf(pkMove.version_group_id)) {
+          versionGroupIds.push(pkMove.version_group_id)
+        }
+      })
+      return versionGroupIds
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.version-group-moves {
+  margin-top: 15px;
+}
+</style>

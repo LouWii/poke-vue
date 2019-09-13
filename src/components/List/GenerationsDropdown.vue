@@ -28,10 +28,6 @@ export default {
       this.getGenerationsVersions()
     }
     this.selectedGenerationId = this.storeSelectedGenerationId
-
-    setTimeout(function(){
-      console.log(this.generationVersionsName(1))
-    }.bind(this), 2000)
   },
   computed: {
     ...mapGetters(['allGenerations', 'allGenerationsVersionIds', 'generationVersionsName']),

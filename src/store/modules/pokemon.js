@@ -9,6 +9,10 @@ const getInitialState = () => {
     species: [], // Contains ALL species, or none
     versions: [], // Contains ALL versions, or none
     generationsVersionIds: [], // Contains ALL version Ids for all generation Ids
+    moveLearnMethods: [], // Contains ALL move learn methods, or none
+
+    partialMoves: [],
+    partialPokemonMoves: [], // Contains ALL PokemonMoves for a Pokemon Variety id
   }
 }
 
@@ -31,6 +35,9 @@ const getters = {
         )
     }
     return versionsName
+  },
+  pokemonMoves: state => pokemonId => {
+    return state.partialPokemonMoves[pokemonId]?state.partialPokemonMoves[pokemonId]:[]
   }
 }
 
@@ -64,7 +71,7 @@ const actions = {
       dispatch('getVersions')
         .then(function() {
           pokeDb.all(
-            `SELECT g.* FROM ${db.dbtablePokemonVersionGroup} AS g
+            `SELECT g.* FROM ${db.dbtableVersionGroup} AS g
             ORDER BY g."order"`,
             {},
             (error, rows) => {
@@ -84,6 +91,48 @@ const actions = {
             }
           )
         })
+    })
+  },
+  getMove({rootState}, moveId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.moves[moveId]) {
+        resolve(rootState.pokemon.moves[moveId])
+      } else {
+        pokeDb.get(
+          `SELECT m.* FROM ${dbtableMove} AS m
+          WHERE id = $moveId`,
+          {$moveId: moveId},
+          (error, row) => {
+            if (error) {
+              reject(error)
+            } else {
+              resolve(row)
+            }
+          }
+        )
+      }
+    })
+  },
+  getMoveLearnMethods({rootState}) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.moveLearnMethods.length) {
+        resolve(rootState.pokemon.moveLearnMethods.length)
+      } else {
+        pokeDb.all(
+          `SELECT m.* FROM ${dbtableMoveLearnMethod} AS m
+          LEFT OUTER JOIN ${dbtableMoveLearnMethodName} AS t
+          ON m.id = t.move_learn_method_id AND (t.language_id = ${langId} OR t.language_id IS NULL)`,
+          {$langId: rootState.settings.userLanguage},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              
+              resolve(rows)
+            }
+          }
+        )
+      }
     })
   },
   /**
@@ -117,6 +166,23 @@ const actions = {
           if (error) {
             reject(error)
           } else {
+            resolve(rows)
+          }
+        }
+      )
+    })
+  },
+  getPokemonMoves({commit}, pokemonId) {
+    return new Promise((resolve, reject) => {
+      pokeDb.all(
+        `SELECT m.* FROM ${db.dbtablePokemonMove} AS m
+        WHERE pokemon_id = $pokemonId`,
+        {$pokemonId: pokemonId},
+        (error, rows) => {
+          if (error) {
+            reject(error)
+          } else {
+            commit('ADD_POKEMON_MOVES', {pokemonId: pokemonId, moves: rows})
             resolve(rows)
           }
         }
@@ -221,8 +287,8 @@ const actions = {
       } else {
         pokeDb.all(
           // BUG: should fetch english name if translation doesn't exist
-          `SELECT v.*, n.name AS t_name FROM ${db.dbtablePokemonVersion} AS v
-          LEFT OUTER JOIN ${db.dbtablePokemonVersionName} AS n 
+          `SELECT v.*, n.name AS t_name FROM ${db.dbtableVersion} AS v
+          LEFT OUTER JOIN ${db.dbtableVersionName} AS n 
           ON v.id = n.version_id AND (n.language_id = $langId OR n.language_id IS NULL)`,
           {$langId: rootState.settings.userLanguage},
           (error, rows) => {
@@ -244,6 +310,12 @@ const actions = {
 }
 
 const mutations = {
+  ADD_MOVE(state, payload) {
+    Vue.set(state.partialMoves, payload.moveId, payload.move)
+  },
+  ADD_POKEMON_MOVES(state, payload) {
+    Vue.set(state.partialPokemonMoves, payload.pokemonId, payload.moves)
+  },
   SET_GENERATIONS(state, generations) {
     Vue.set(state, 'generations', generations)
   },

@@ -14,16 +14,19 @@
     <div class="moves">
       <h4>Moves</h4>
       <!-- <poke-moves :moves="getVarietyMovesGroupedByVersionsAndLearnMethod(pokemonVarietyId)"></poke-moves> -->
+      <variety-moves :varietyId="variety.id" />
     </div>
   </section>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+import VarietyMoves from '@/components/Pokemon/VarietyMoves'
 import PokemonSprites from '@/components/Pokemon/PokemonSprites'
 
 export default {
   name: 'Variety',
-  components: {PokemonSprites},
+  components: {PokemonSprites, VarietyMoves},
   props: {
     pokemonHasMultiple: {
       type: Boolean,
@@ -33,6 +36,12 @@ export default {
       type: Object,
       required: true
     }
+  },
+  beforeMount: function() {
+    this.getPokemonMoves(this.variety.id)
+  },
+  methods: {
+    ...mapActions(['getPokemonMoves'])
   }
 }
 </script>
