@@ -56,20 +56,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getVersions']),
+    ...mapActions(['getPokemonMoves', 'getVersions']),
     initVersionsDropdown() {
-      const versionGroupIds = this.getPokemonMovesVersionGroups()
-      let versionGroups = []
-      let minVersionGroupId = null
-      versionGroupIds.forEach(vgId => {
-        if (!minVersionGroupId) minVersionGroupId = vgId
-        versionGroups.push({
-          versionGroupId: vgId,
-          versionsStr: this.versionsFromVersionGroup(vgId).map(v => v.t_name||v.name).join(', ')
-        })
-      })
-      this.versionGroups = versionGroups
-      this.selectedVersionGroup = minVersionGroupId
+      this.getPokemonMoves(this.varietyId)
+        .then(function() {
+          const versionGroupIds = this.getPokemonMovesVersionGroups()
+          let versionGroups = []
+          let minVersionGroupId = null
+          versionGroupIds.forEach(vgId => {
+            if (!minVersionGroupId) minVersionGroupId = vgId
+            versionGroups.push({
+              versionGroupId: vgId,
+              versionsStr: this.versionsFromVersionGroup(vgId).map(v => v.t_name||v.name).join(', ')
+            })
+          })
+          this.versionGroups = versionGroups
+          this.selectedVersionGroup = minVersionGroupId
+        }.bind(this))
     },
     getPokemonMovesVersionGroups() {
       const versionGroupIds = []
