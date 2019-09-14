@@ -11,7 +11,6 @@
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
-import { setTimeout } from 'timers';
 
 export default {
   name: 'GenerationsDropdown',

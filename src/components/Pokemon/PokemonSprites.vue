@@ -108,7 +108,7 @@ export default {
   },
   watch: {
     varietyId: {
-      handler: function(newVarietyId) {
+      handler: function() {
         this.currentSpriteFormFront = this.defaultSpritFormFront
         this.currentSpriteFormBack = this.defaultSpritFormBack
         this.fetchSprites()
