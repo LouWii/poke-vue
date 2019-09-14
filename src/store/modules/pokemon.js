@@ -12,7 +12,7 @@ const getInitialState = () => {
     moveLearnMethods: [], // Contains ALL move learn methods, or none
 
     partialMoves: [],
-    partialPokemonMoves: [], // Contains ALL PokemonMoves for a Pokemon Variety id
+    partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id
   }
 }
 
@@ -21,6 +21,7 @@ const state = getInitialState()
 const getters = {
   allGenerations: state => state.generations,
   allGenerationsVersionIds: state => state.generationsVersionIds,
+  allMoveLearnMethods: state => state.moveLearnMethods,
   allSpecies: state => state.species,
   allVersions: state => state.versions,
   versionsFromVersionGroup: state => versionGroupId => state.versions.filter(version => version.version_group_id === versionGroupId),
@@ -36,9 +37,13 @@ const getters = {
     }
     return versionsName
   },
-  pokemonMoves: state => pokemonId => {
-    return state.partialPokemonMoves[pokemonId]?state.partialPokemonMoves[pokemonId]:[]
-  }
+  moveLearnMethod: state => moveLearnMethodId => state.moveLearnMethods.find(mlMethod => mlMethod.id === moveLearnMethodId),
+  movesFromIds: state => moveIds => {
+    const tempArr = []
+    moveIds.forEach(mId => {tempArr.push(state.partialMoves[mId])})
+    return tempArr
+  },
+  pokemonMoves: state => pokemonId => state.partialPokemonMoves[pokemonId]?state.partialPokemonMoves[pokemonId]:[]
 }
 
 const actions = {
@@ -99,7 +104,7 @@ const actions = {
         resolve(rootState.pokemon.moves[moveId])
       } else {
         pokeDb.get(
-          `SELECT m.* FROM ${dbtableMove} AS m
+          `SELECT m.* FROM ${db.dbtableMove} AS m
           WHERE id = $moveId`,
           {$moveId: moveId},
           (error, row) => {
@@ -113,21 +118,49 @@ const actions = {
       }
     })
   },
-  getMoveLearnMethods({rootState}) {
+  getMovesFromIds({commit, getters, rootState}, moveIds) {
     return new Promise((resolve, reject) => {
-      if (rootState.pokemon.moveLearnMethods.length) {
-        resolve(rootState.pokemon.moveLearnMethods.length)
-      } else {
+      const idsToFetch = []
+      moveIds.forEach(moveId => {
+        if (!rootState.pokemon.partialMoves[moveId]) idsToFetch.push(moveId)
+      })
+
+      if (idsToFetch.length) {
+        const idsStr = idsToFetch.join(', ')
         pokeDb.all(
-          `SELECT m.* FROM ${dbtableMoveLearnMethod} AS m
-          LEFT OUTER JOIN ${dbtableMoveLearnMethodName} AS t
-          ON m.id = t.move_learn_method_id AND (t.language_id = ${langId} OR t.language_id IS NULL)`,
+          `SELECT m.*, t.name AS t_name FROM ${db.dbtableMove} AS m
+          LEFT OUTER JOIN ${db.dbtableMoveName} AS t ON m.id = t.move_id AND (t.language_id = $langId OR t.language_id IS NULL)
+          WHERE m.id IN (${idsStr})`,
           {$langId: rootState.settings.userLanguage},
           (error, rows) => {
             if (error) {
               reject(error)
             } else {
-              
+              rows.forEach(row => {commit('ADD_MOVE', row)})
+              resolve(getters.movesFromIds(moveIds))
+            }
+          }
+        )
+      } else {
+        resolve(getters.movesFromIds(moveIds))
+      }
+    })
+  },
+  getMoveLearnMethods({commit, rootState}) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.moveLearnMethods.length) {
+        resolve(rootState.pokemon.moveLearnMethods.length)
+      } else {
+        pokeDb.all(
+          `SELECT m.*, t.name AS t_name FROM ${db.dbtableMoveLearnMethod} AS m
+          LEFT OUTER JOIN ${db.dbtableMoveLearnMethodName} AS t
+          ON m.id = t.move_learn_method_id AND (t.language_id = $langId OR t.language_id IS NULL)`,
+          {$langId: rootState.settings.userLanguage},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('SET_MOVE_LEARN_METHODS', rows)
               resolve(rows)
             }
           }
@@ -172,21 +205,25 @@ const actions = {
       )
     })
   },
-  getPokemonMoves({commit}, pokemonId) {
+  getPokemonMoves({commit, getters}, pokemonId) {
     return new Promise((resolve, reject) => {
-      pokeDb.all(
-        `SELECT m.* FROM ${db.dbtablePokemonMove} AS m
-        WHERE pokemon_id = $pokemonId`,
-        {$pokemonId: pokemonId},
-        (error, rows) => {
-          if (error) {
-            reject(error)
-          } else {
-            commit('ADD_POKEMON_MOVES', {pokemonId: pokemonId, moves: rows})
-            resolve(rows)
+      if (getters.pokemonMoves[pokemonId]) {
+        resolve(getters.pokemonMoves[pokemonId])
+      } else {
+        pokeDb.all(
+          `SELECT m.* FROM ${db.dbtablePokemonMove} AS m
+          WHERE pokemon_id = $pokemonId`,
+          {$pokemonId: pokemonId},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('ADD_POKEMON_MOVES', {pokemonId: pokemonId, moves: rows})
+              resolve(rows)
+            }
           }
-        }
-      )
+        )
+      }
     })
   },
   getPokemonSprites(context, pokemonId) {
@@ -310,8 +347,8 @@ const actions = {
 }
 
 const mutations = {
-  ADD_MOVE(state, payload) {
-    Vue.set(state.partialMoves, payload.moveId, payload.move)
+  ADD_MOVE(state, move) {
+    Vue.set(state.partialMoves, move.id, move)
   },
   ADD_POKEMON_MOVES(state, payload) {
     Vue.set(state.partialPokemonMoves, payload.pokemonId, payload.moves)
@@ -321,6 +358,9 @@ const mutations = {
   },
   SET_GENERATIONS_VERSIONS_IDS(state, generationsVersionIds) {
     Vue.set(state, 'generationsVersionIds', generationsVersionIds)
+  },
+  SET_MOVE_LEARN_METHODS(state, moveLearnMethods) {
+    Vue.set(state, 'moveLearnMethods', moveLearnMethods)
   },
   SET_SPECIES(state, species) {
     Vue.set(state, 'species', species)

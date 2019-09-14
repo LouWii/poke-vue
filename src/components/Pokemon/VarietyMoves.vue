@@ -13,17 +13,17 @@
         </option>
       </select>
     </div>
-    <moves-by-type v-if="selectedVersionGroup" :pokemonMoves="selectedMoves" />
+    <moves-by-method v-if="selectedVersionGroup" :pokemonMoves="selectedMoves" />
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import MovesByType from '@/components/Pokemon/MovesByType'
+import MovesByMethod from '@/components/Move/MovesByMethod'
 
 export default {
   name: 'VarietyMoves',
-  components: {MovesByType},
+  components: {MovesByMethod},
   data: () => {
     return {
       selectedVersionGroup: null,
@@ -44,8 +44,6 @@ export default {
     } else {
       this.initVersionsDropdown()
     }
-
-
   },
   computed: {
     ...mapGetters(['allVersions', 'pokemonMoves', 'versionsFromVersionGroup']),

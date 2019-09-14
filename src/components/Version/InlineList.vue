@@ -34,7 +34,7 @@ export default {
   },
   watch: {
     versionIds: {
-      handler: function(newIds) {
+      handler: function() {
         this.processIds()
       }
     }
