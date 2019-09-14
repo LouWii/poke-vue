@@ -5,7 +5,6 @@ input {
     &[type="text"] {
         background: $input-background;
         border: 0;
-        border-bottom: $input-border-width solid $input-border-color;
         padding: 5px;
     }
 }

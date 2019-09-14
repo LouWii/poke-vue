@@ -12,8 +12,6 @@
       <div class=""><label>Weight</label><span>{{ variety.height }}</span></div>
     </div>
     <div class="moves">
-      <h4>Moves</h4>
-      <!-- <poke-moves :moves="getVarietyMovesGroupedByVersionsAndLearnMethod(pokemonVarietyId)"></poke-moves> -->
       <variety-moves :varietyId="variety.id" />
     </div>
   </section>

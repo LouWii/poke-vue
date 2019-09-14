@@ -56,6 +56,7 @@ export default {
       })
 
       this.moveLearnMethods = moveLearnMethods
+      this.selectedMoveLearnMethodId = moveLearnMethods[0].id
     },
     getUniqueMoveLearnMethods() {
       const learnMethodIds = []
@@ -75,3 +76,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.moves-by-method {
+  .moves-method-filters {
+    button {
+      margin-right: $margin-global-medium;
+    }
+  }
+}
+</style>

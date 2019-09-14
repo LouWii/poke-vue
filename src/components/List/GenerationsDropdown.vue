@@ -1,5 +1,6 @@
 <template>
   <div class="generations-dropdown-wrapper">
+    <label>Generation</label>
     <select v-model="selectedGenerationId">
       <option value="">All</option>
       <option v-for="generation in allGenerations" :key="generation.id" :value="generation.id">
@@ -49,3 +50,20 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.generations-dropdown-wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: $margin-global;
+  padding: 0 $padding-global;
+  label {
+    flex: 1;
+    font-size: $font-size-medium;
+    margin-right: $margin-global-medium;
+  }
+  select {
+    width: 100%;
+  }
+}
+</style>

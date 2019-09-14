@@ -1,6 +1,9 @@
 <template>
   <section class="pokemon-master-list">
-    <h3>Pokémons</h3>
+    <h3>
+      Pokémons
+      <span>{{getFilteredSpecies.length}} results</span>
+    </h3>
     <div class="filters-wrapper">
       <generations-dropdown/>
       <search-field/>
@@ -56,6 +59,15 @@
 
 <style lang="scss">
   .pokemon-master-list {
+    h3 {
+      display: flex;
+      justify-content: space-between;
+      margin: $margin-global;
+      span {
+        font-weight: 400;
+        font-size: $font-size-small;
+      }
+    }
     .list-container {
       ul {
         list-style: none;

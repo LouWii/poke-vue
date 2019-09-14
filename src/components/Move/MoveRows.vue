@@ -1,5 +1,9 @@
 <template>
-  <div class="move-rows">
+  <div class="move-rows" v-if="moves.length">
+    <div class="headers">
+      <div class="header">Move</div>
+      <div class="header">Level</div>
+    </div>
     <move-row
       v-for="move in moves"
       :key="move.move.id"
@@ -63,3 +67,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.move-rows {
+  .headers {
+    display: table-row;
+
+    .header {
+      display: table-cell;
+    }
+  }
+}
+</style>

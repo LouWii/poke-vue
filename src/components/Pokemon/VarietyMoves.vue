@@ -1,7 +1,9 @@
 <template>
   <div class="variety-moves">
+    <h3>Moves</h3>
     <div class="version-group-selector">
-      <select v-model="selectedVersionGroup">
+      <label for="version-group-moves-selector">Versions:</label>
+      <select id="version-group-moves-selector" v-model="selectedVersionGroup">
         <!-- <option
           v-for="(move, moveIndex) in Object.keys(moves)"
           :key="moveIndex"
@@ -86,7 +88,19 @@ export default {
 </script>
 
 <style lang="scss">
-.version-group-moves {
-  margin-top: 15px;
+.variety-moves {
+  margin-top: $margin-global;
+  padding: 0 0.5rem;
+  h3 {
+    margin: 0;
+  }
+}
+.version-group-selector {
+  margin: $margin-global-medium 0;
+  label {
+    display: inline-block;
+    font-size: $font-size-medium;
+    margin-right: $margin-global-medium;
+  }
 }
 </style>
