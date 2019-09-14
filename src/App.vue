@@ -8,18 +8,23 @@
       <div class="block1"></div>
       <div class="block2"></div>
       <div class="block3"></div>
-      <!-- <button
+      <button
         type="button"
-        class="settings-trigger"
-        :class="{ active: settingsOpened }"
-        @click="onSettingsTrigger">
+        class="button-nav settings"
+        @click.prevent="goToSettings">
         <font-awesome-icon icon="cog"/>
-      </button> -->
+      </button>
+      <button
+        class="button-nav previous"
+        type="button"
+        @click.prevent="goToPrevious">
+        <font-awesome-icon icon="chevron-left"/>
+      </button>
     </header>
-    <div id="nav">
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-    </div>
+    </div> -->
     <main class="pokedex">
       <div class="content">
         <router-view/>
@@ -27,6 +32,22 @@
     </main>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'App',
+  methods: {
+    goToPrevious: function() {
+      this.$router.go(-1)
+    },
+    goToSettings: function() {
+      if (this.$route.name !== 'settings') {
+        this.$router.push('settings')
+      }
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 
@@ -36,16 +57,6 @@
   position: absolute;
   right: 0;
   top: 0;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 .pokedex-wrapper {
   display: flex;
@@ -108,15 +119,24 @@
     left: 179px;
     width: 650px;
   }
-  .settings-trigger {
+  .button-nav {
     background: none;
     border: 0;
-    
     cursor: pointer;
     font-size: 20px;
     position: absolute;
-    top: 3px;
-    right: 10px;
+
+    &.settings {
+      top: 3px;
+      right: 10px;
+    }
+
+    &.previous {
+      font-size: 26px;
+      left: 172px;
+      top: 47px;
+    }
+    
     &:hover, &.active {
       .svg-inline--fa {
         color: rgba(0, 0, 0, 0.70);
@@ -131,7 +151,7 @@
   background: $pokedex-red;
   flex: 1;
   overflow: hidden;
-  padding: 10px;
+  padding: 0 .7rem .7rem .7rem;
 }
 .content {
   background: #fff;

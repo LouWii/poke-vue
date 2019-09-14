@@ -6,9 +6,6 @@
       <h3>
         <translated-name :pokemon="pokemonSpecies"/>
       </h3>
-      <button class="close clear" @click="onClose" title="Close">
-        <!-- <font-awesome-icon icon="times"/> --> X
-      </button>
     </header>
     <section class="body-wrapper" v-if="pokemonSpecies">
       <div class="pokemon-single-data">
@@ -49,9 +46,6 @@ export default {
   },
   methods: {
     ...mapActions(['getPokemonSpecies']),
-    onClose: function() {
-      this.$router.go(-1)
-    }
   }
 }
 </script>

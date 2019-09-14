@@ -20,9 +20,14 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
+      path: '/settings',
+      name: 'settings',
+      component: () => import(/* webpackChunkName: "settings" */ './views/Settings.vue')
+    },
+    {
       path: '/pokemon/:id',
       name: 'pokemon',
-      component: () => import(/* webpackChunkName: "about" */ './views/Pokemon.vue')
+      component: () => import(/* webpackChunkName: "pokemonSingle" */ './views/Pokemon.vue')
     }
   ]
 })
