@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home-wrapper">
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
     <MasterList/>
   </div>
@@ -16,3 +16,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.home-wrapper {
+  height: 100%;
+}
+</style>

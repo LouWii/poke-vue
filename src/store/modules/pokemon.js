@@ -6,10 +6,11 @@ import {buildQueryFilter} from '@/utils/query'
 const getInitialState = () => {
   return {
     generations: [], // Contains ALL generations, or none
-    species: [], // Contains ALL species, or none
-    versions: [], // Contains ALL versions, or none
     generationsVersionIds: [], // Contains ALL version Ids for all generation Ids
     moveLearnMethods: [], // Contains ALL move learn methods, or none
+    species: [], // Contains ALL species, or none
+    types: [], // Contains ALL types, or none
+    versions: [], // Contains ALL versions, or none
 
     partialMoves: [],
     partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id
@@ -23,6 +24,7 @@ const getters = {
   allGenerationsVersionIds: state => state.generationsVersionIds,
   allMoveLearnMethods: state => state.moveLearnMethods,
   allSpecies: state => state.species,
+  allTypes: state => state.types,
   allVersions: state => state.versions,
   versionsFromVersionGroup: state => versionGroupId => state.versions.filter(version => version.version_group_id === versionGroupId),
   generationVersionsName: state => generationId => {
@@ -43,7 +45,8 @@ const getters = {
     moveIds.forEach(mId => {tempArr.push(state.partialMoves[mId])})
     return tempArr
   },
-  pokemonMoves: state => pokemonId => state.partialPokemonMoves[pokemonId]?state.partialPokemonMoves[pokemonId]:[]
+  pokemonMoves: state => pokemonId => state.partialPokemonMoves[pokemonId]?state.partialPokemonMoves[pokemonId]:[],
+  type: state => typeId => state.types.find(type => type.id === typeId)
 }
 
 const actions = {
@@ -313,6 +316,29 @@ const actions = {
       )
     })
   },
+  getTypes({commit, rootState}) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.types.length) {
+        resolve(rootState.pokemon.types)
+      } else {
+        pokeDb.all(
+          // BUG: should fetch english name if translation doesn't exist
+          `SELECT t.*, n.name AS t_name FROM ${db.dbtableType} AS t
+          LEFT OUTER JOIN ${db.dbtableTypeName} AS n 
+          ON t.id = n.type_id AND (n.language_id = $langId OR n.language_id IS NULL)`,
+          {$langId: rootState.settings.userLanguage},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('SET_TYPES', rows)
+              resolve(rows)
+            }
+          }
+        )
+      }
+    })
+  },
   getVersions({commit, rootState}, payload) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.versions.length) {
@@ -364,6 +390,9 @@ const mutations = {
   },
   SET_SPECIES(state, species) {
     Vue.set(state, 'species', species)
+  },
+  SET_TYPES(state, types) {
+    Vue.set(state, 'types', types)
   },
   SET_VERSIONS(state, versions) {
     Vue.set(state, 'versions', versions)

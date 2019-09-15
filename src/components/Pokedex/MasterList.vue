@@ -35,6 +35,7 @@
       }
     },
     beforeMount: function() {
+      this.getTypes()
       this.getPokemonsSpecies()
         .then(rows => {
           this.pokemonList = rows
@@ -47,7 +48,7 @@
       ...mapGetters(['getFilteredSpecies']),
     },
     methods: {
-      ...mapActions(['getPokemonsSpecies']),
+      ...mapActions(['getPokemonsSpecies', 'getTypes']),
       ...{
         onPokemonClick (event) {
           this.showPokemon(event.currentTarget.getAttribute('data-pokemon-id'))
@@ -59,16 +60,21 @@
 
 <style lang="scss">
   .pokemon-master-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
     h3 {
       display: flex;
       justify-content: space-between;
-      margin: $margin-global;
+      margin: $margin-global $margin-global 0 $margin-global;
       span {
         font-weight: 400;
         font-size: $font-size-small;
       }
     }
     .list-container {
+      overflow: auto;
       ul {
         list-style: none;
         margin: 0 10px;

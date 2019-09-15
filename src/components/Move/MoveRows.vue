@@ -3,6 +3,10 @@
     <div class="headers">
       <div class="header">Move</div>
       <div v-if="showLevel" class="header">Level</div>
+      <div class="header">PP</div>
+      <div class="header" title="Power">Pow.</div>
+      <div class="header" title="Accuracy">Accur.</div>
+      <div class="header">Type</div>
     </div>
     <move-row
       v-for="move in moves"
@@ -75,11 +79,18 @@ export default {
 
 <style lang="scss">
 .move-rows {
+  margin: $margin-global 0;
   .headers {
     display: table-row;
 
     .header {
       display: table-cell;
+      font-weight: 600;
+      padding: $padding-global-small;
+
+      &:first-child {
+        padding-left: 0;
+      }
     }
   }
 }
