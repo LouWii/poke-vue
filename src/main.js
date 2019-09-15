@@ -5,9 +5,9 @@ import store from '@/store/store'
 
 // Font awsome setup
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCog, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faChevronLeft, faHome, faList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-library.add(faCog, faChevronLeft)
+library.add(faCog, faChevronLeft, faHome, faList)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

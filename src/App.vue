@@ -15,10 +15,16 @@
         <font-awesome-icon icon="cog"/>
       </button>
       <button
-        class="button-nav previous"
+        class="button-nav main-nav previous"
         type="button"
         @click.prevent="goToPrevious">
         <font-awesome-icon icon="chevron-left"/>
+      </button>
+      <button
+        class="button-nav main-nav home"
+        type="button"
+        @click.prevent="goToHome">
+        <font-awesome-icon icon="list"/>
       </button>
     </header>
     <!-- <div id="nav">
@@ -37,6 +43,11 @@
 export default {
   name: 'App',
   methods: {
+    goToHome: function() {
+      if (this.$route.name !== 'home') {
+        this.$router.push({name: 'home'})
+      }
+    },
     goToPrevious: function() {
       this.$router.go(-1)
     },
@@ -126,14 +137,32 @@ export default {
     font-size: 20px;
     position: absolute;
 
+    &.main-nav {
+      font-size: 26px;
+
+      .svg-inline--fa {
+        color: rgba(0, 0, 0, 0.60);
+      }
+
+      &:hover, &.active {
+        .svg-inline--fa {
+          color: rgba(0, 0, 0, 0.80);
+        }
+      }
+    }
+
     &.settings {
       top: 3px;
       right: 10px;
     }
 
     &.previous {
-      font-size: 26px;
       left: 172px;
+      top: 47px;
+    }
+
+    &.home {
+      right: 10px;
       top: 47px;
     }
     
