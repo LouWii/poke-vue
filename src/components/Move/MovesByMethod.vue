@@ -9,7 +9,7 @@
         {{mlMethod.t_name||mlMethod.name}}
       </button>
     </div>
-    <move-rows :pokemonMoves="selectedMoves"/>
+    <move-rows :pokemonMoves="selectedMoves" :showLevel="selectedMoveLearnMethodId === 1" />
   </div>
 </template>
 

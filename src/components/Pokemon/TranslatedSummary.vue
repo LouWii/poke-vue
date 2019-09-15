@@ -8,10 +8,10 @@
     </div>
     <div v-if="summaries.length != 0" class="controls">
       <button class="clear" type="button" @click="onControlLeft">
-        <!-- <font-awesome-icon icon="angle-left"/> --> {
+        <font-awesome-icon icon="angle-left"/>
       </button>
       <button class="clear" type="button" @click="onControlRight">
-        <!-- <font-awesome-icon icon="angle-right"/> --> }
+        <font-awesome-icon icon="angle-right"/>
       </button>
     </div>
   </div>
@@ -92,9 +92,11 @@ export default {
 
 <style lang="scss">
 .pokemon-summary {
-  margin: 25px 0 15px;
+  margin-bottom: 15px;
+  padding: 0 $padding-global;
+
   .summary-content {
-    min-height: 80px;
+    // min-height: 80px;
   }
   .versions {
     margin-top: 5px;

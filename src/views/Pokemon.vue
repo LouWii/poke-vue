@@ -9,7 +9,6 @@
     </header>
     <section class="body-wrapper" v-if="pokemonSpecies">
       <div class="pokemon-single-data">
-        <hr/>
         <translated-summary :speciesId="$route.params.id"/>
         <hr/>
         <!-- <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div> -->

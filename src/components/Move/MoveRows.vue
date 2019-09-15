@@ -2,13 +2,14 @@
   <div class="move-rows" v-if="moves.length">
     <div class="headers">
       <div class="header">Move</div>
-      <div class="header">Level</div>
+      <div v-if="showLevel" class="header">Level</div>
     </div>
     <move-row
       v-for="move in moves"
-      :key="move.move.id"
+      :key="move.pokemonMove.id"
       :move="move.move"
-      :pokemonMove="move.pokemonMove" />
+      :pokemonMove="move.pokemonMove" 
+      :showLevel="showLevel"/>
   </div>
 </template>
 
@@ -23,6 +24,10 @@ export default {
     pokemonMoves: {
       required: true,
       type: Array
+    },
+    showLevel: {
+      type: Boolean,
+      default: false,
     }
   },
   data: () => {

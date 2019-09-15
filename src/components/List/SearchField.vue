@@ -2,7 +2,9 @@
   <div class="search-field-wrapper">
     <div class="input-with-reset">
       <input type="text" v-model="keywords" placeholder="Search..." />
-      <button class="clear" @click.prevent="clearKeywords" role="button">X</button>
+      <button v-if="keywords.length" class="clear" @click.prevent="clearKeywords" role="button">
+        <font-awesome-icon icon="times-circle"/>
+      </button>
     </div>
   </div>
 </template>
@@ -60,6 +62,20 @@ export default {
 
   input {
     width: 100%;
+  }
+  button {
+    top: 2px;
+
+    &:hover {
+      .svg-inline--fa {
+        color: #000;
+        opacity: 1;
+      }
+    }
+    .svg-inline--fa {
+      color: #000;
+      opacity: .5;
+    }
   }
 }
 </style>

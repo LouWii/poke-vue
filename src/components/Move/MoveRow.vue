@@ -2,7 +2,8 @@
   <!-- <div class="move-row"> -->
     <div class="move-row" v-if="move">
       <div class="attr name">{{move.t_name||move.name}}</div>
-      <div v-if="pokemonMove" class="attr level">{{pokemonMove.level}}</div>
+      <div v-if="pokemonMove && showLevel" class="attr level">{{pokemonMove.level}}</div>
+      <div class=""></div>
     </div>
   <!-- </div> -->
 </template>
@@ -17,6 +18,10 @@ export default {
     },
     pokemonMove: {
       type: Object
+    },
+    showLevel: {
+      type: Boolean,
+      default: false,
     }
   }
 }
