@@ -5,13 +5,6 @@ import modules from './modules'
 
 import pokeDb from '@/database'
 
-pokeDb.all('SELECT * FROM pokemon_v2_ability LIMIT 3', (error, rows) => {
-  if (error) {
-    console.log(error);
-  }
-  console.log(rows);
-})
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({

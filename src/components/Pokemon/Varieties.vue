@@ -39,7 +39,6 @@ export default {
   beforeMount: function() {
     this.getPokemons({filters: {pokemon_species_id: this.speciesId}})
       .then(rows => {
-        console.log(rows)
         this.varieties = rows
       })
       .catch(error => {
