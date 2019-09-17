@@ -56,7 +56,7 @@ export default {
       })
 
       this.moveLearnMethods = moveLearnMethods
-      this.selectedMoveLearnMethodId = moveLearnMethods[0].id
+      // this.selectedMoveLearnMethodId = moveLearnMethods[0].id TODO: Bug here?
     },
     getUniqueMoveLearnMethods() {
       const learnMethodIds = []

@@ -15,19 +15,21 @@
       </div>
       <!-- <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties> -->
       <varieties :speciesId="$route.params.id"/>
+      <evolution-chain :evolutionChainId="pokemonSpecies.evolution_chain_id"/>
     </section>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import EvolutionChain from '@/components/EvolutionChain/EvolutionChain'
 import TranslatedSummary from '@/components/Pokemon/TranslatedSummary'
 import TranslatedName from '@/components/Pokemon/TranslatedName'
 import Varieties from '@/components/Pokemon/Varieties'
 
 export default {
   name: 'Pokemon',
-  components: {TranslatedSummary, TranslatedName, Varieties},
+  components: {EvolutionChain, TranslatedSummary, TranslatedName, Varieties},
   data: () => {
     return {
       pokemon: null,
@@ -35,16 +37,26 @@ export default {
     }
   },
   beforeMount: function() {
-    this.getPokemonSpecies(this.$route.params.id)
+    this.initView()
+  },
+  methods: {
+    ...mapActions(['getPokemonSpecies']),
+    initView: function() {
+      this.getPokemonSpecies(this.$route.params.id)
       .then(row => {
         this.pokemonSpecies = row
       })
       .catch(error => {
         console.error(error)
       })
+    }
   },
-  methods: {
-    ...mapActions(['getPokemonSpecies']),
+  watch: {
+    $route: {
+      handler: function() {
+        this.initView()
+      }
+    }
   }
 }
 </script>

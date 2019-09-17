@@ -39,7 +39,26 @@ export default {
     }
   },
   beforeMount: function() {
-    this.getPokemonSpeciesFlavorTexts(this.speciesId)
+    this.initFlavorTexts()
+  },
+  computed: {
+    currentSummary: function () {
+      if (this.summaries.length) {
+        if (this.summaries[this.currentSummaryIndex].t_flavor_text) {
+          return this.summaries[this.currentSummaryIndex].t_flavor_text
+        }
+        return this.summaries[this.currentSummaryIndex].flavor_text
+      }
+      return null;
+    },
+    currentSummaryVersions: function() {
+      return this.summaries.length ? this.summaries[this.currentSummaryIndex].versions : []
+    }
+  },
+  methods: {
+    ...mapActions(['getPokemonSpeciesFlavorTexts']),
+    initFlavorTexts() {
+      this.getPokemonSpeciesFlavorTexts(this.speciesId)
       .then(rows => {
 
         // Group by english flavor text (sometime the same between versions)
@@ -62,29 +81,20 @@ export default {
       .catch(error => {
         console.error(error)
       })
-  },
-  computed: {
-    currentSummary: function () {
-      if (this.summaries.length) {
-        if (this.summaries[this.currentSummaryIndex].t_flavor_text) {
-          return this.summaries[this.currentSummaryIndex].t_flavor_text
-        }
-        return this.summaries[this.currentSummaryIndex].flavor_text
-      }
-      return null;
     },
-    currentSummaryVersions: function() {
-      return this.summaries.length ? this.summaries[this.currentSummaryIndex].versions : []
-    }
-  },
-  methods: {
-    ...mapActions(['getPokemonSpeciesFlavorTexts']),
     onControlLeft () {
       this.currentSummaryIndex--
       if (this.currentSummaryIndex < 0) this.currentSummaryIndex = this.summaries.length - 1
     },
     onControlRight () {
       this.currentSummaryIndex = (this.currentSummaryIndex + 1) % (this.summaries.length)
+    }
+  },
+  watch: {
+    speciesId: {
+      handler: function() {
+        this.initFlavorTexts()
+      }
     }
   }
 }

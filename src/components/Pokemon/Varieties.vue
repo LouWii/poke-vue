@@ -37,13 +37,7 @@ export default {
     }
   },
   beforeMount: function() {
-    this.getPokemons({filters: {pokemon_species_id: this.speciesId}})
-      .then(rows => {
-        this.varieties = rows
-      })
-      .catch(error => {
-        console.error(error)
-      })
+    this.initVarieties()
   },
   computed: {
     selectedVariety: function() {
@@ -52,8 +46,24 @@ export default {
   },
   methods: {
     ...mapActions(['getPokemons']),
+    initVarieties: function() {
+      this.getPokemons({filters: {pokemon_species_id: this.speciesId}})
+      .then(rows => {
+        this.varieties = rows
+      })
+      .catch(error => {
+        console.error(error)
+      })
+    },
     selectVariety (event) {
       this.selectedVarietyIndex = event.currentTarget.getAttribute('data-variety-index')
+    }
+  },
+  watch: {
+    speciesId: {
+      handler: function() {
+        this.initVarieties()
+      }
     }
   }
 }
@@ -65,6 +75,8 @@ export default {
     .selector {
       ul {
         display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         list-style: none;
         padding: 0;
       }

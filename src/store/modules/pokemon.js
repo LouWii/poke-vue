@@ -12,8 +12,8 @@ const getInitialState = () => {
     types: [], // Contains ALL types, or none
     versions: [], // Contains ALL versions, or none
 
-    partialMoves: [],
-    partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id
+    partialMoves: [], // Contains moves (stored here when fetched, one at a time)
+    partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id (when we fetch for a variety id)
   }
 }
 
@@ -50,6 +50,22 @@ const getters = {
 }
 
 const actions = {
+  getEvolutionChainSpecies({dispatch, rootState}, evolutionChainId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.species.length) {
+        const evChainSpecies = rootState.pokemon.species.filter(species => species.evolution_chain_id === evolutionChainId).sort((sA, sB) => sA.order < sB.order)
+        resolve (evChainSpecies)
+      } else {
+        dispatch('getPokemonsSpecies').then(function() {
+          const evChainSpecies = rootState.pokemon.species.filter(species => species.evolution_chain_id === evolutionChainId)
+          resolve (evChainSpecies)
+        })
+        .catch(error => {
+          reject(error)
+        })
+      }
+    })
+  },
   getGenerations({commit, rootState}) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.generations.length) {
