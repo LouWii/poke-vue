@@ -1,19 +1,20 @@
 import sqlite3 from 'sqlite3'
 
+sqlite3.verbose()
 const pokeDb = new sqlite3.cached.Database('db.sqlite3')
 
 export default pokeDb
 
 const dbTablePrefix = 'pokemon_v2_'
-export const dbtablePokemon                   = dbTablePrefix + 'pokemon'
 // Only 20 pkmn have more than 1 form
-export const dbtablePokemonForm               = dbTablePrefix + 'pokemonform'
 export const dbtableGeneration                = dbTablePrefix + 'generation'
 export const dbtableGenerationName            = dbTablePrefix + 'generationname'
 export const dbtableMove                      = dbTablePrefix + 'move'
 export const dbtableMoveLearnMethod           = dbTablePrefix + 'movelearnmethod'
 export const dbtableMoveLearnMethodName       = dbTablePrefix + 'movelearnmethodname'
 export const dbtableMoveName                  = dbTablePrefix + 'movename'
+export const dbtablePokemon                   = dbTablePrefix + 'pokemon'
+export const dbtablePokemonForm               = dbTablePrefix + 'pokemonform'
 export const dbtablePokemonMove               = dbTablePrefix + 'pokemonmove'
 export const dbtablePokemonSpecies            = dbTablePrefix + 'pokemonspecies'
 export const dbtablePokemonSpeciesDescription = dbTablePrefix + 'pokemonspeciesdescription'

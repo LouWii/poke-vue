@@ -14,6 +14,7 @@ const getInitialState = () => {
 
     partialMoves: [], // Contains moves (stored here when fetched, one at a time)
     partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id (when we fetch for a variety id)
+    partialSpeciesToDefaultVariety: [], // Contains species id as key, its default variety as value
   }
 }
 
@@ -332,6 +333,28 @@ const actions = {
       )
     })
   },
+  getSpeciesDefaultVariety({commit, rootState}, speciesId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.partialSpeciesToDefaultVariety[speciesId]) {
+        resolve(rootState.pokemon.partialSpeciesToDefaultVariety[speciesId])
+      } else {
+        pokeDb.get(
+          `SELECT p.id
+          FROM ${db.dbtablePokemon} AS p
+          WHERE p.pokemon_species_id = $speciesId AND p.is_default = $default`,
+          {$speciesId: speciesId, $default: 1},
+          (error, row) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('ADD_SPECIES_DEFAULT_VARIETY', {speciesId, varietyId: row.id})
+              resolve(row.id)
+            }
+          }
+        )
+      }
+    })
+  },
   getTypes({commit, rootState}) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.types.length) {
@@ -394,6 +417,9 @@ const mutations = {
   },
   ADD_POKEMON_MOVES(state, payload) {
     Vue.set(state.partialPokemonMoves, payload.pokemonId, payload.moves)
+  },
+  ADD_SPECIES_DEFAULT_VARIETY(state, payload) {
+    Vue.set(state.partialSpeciesToDefaultVariety, payload.speciesId, payload.varietyId)
   },
   SET_GENERATIONS(state, generations) {
     Vue.set(state, 'generations', generations)

@@ -91,6 +91,7 @@ export default {
     flex-wrap: wrap;
 
     .species-column {
+      flex: 1;
       min-width: 80px;
     }
   }

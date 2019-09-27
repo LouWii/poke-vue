@@ -38,6 +38,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {getSpriteUrl} from '@/utils/sprites'
 
 export default {
   name: 'PokemonSprites',
@@ -69,10 +70,10 @@ export default {
   },
   computed: {
     currentFrontSprite: function () {
-      return this.sprites && this.sprites[this.currentSpriteFormFront] ? this.getSpriteUrl(this.sprites[this.currentSpriteFormFront]) : null
+      return this.sprites && this.sprites[this.currentSpriteFormFront] ? getSpriteUrl(this.sprites[this.currentSpriteFormFront]) : null
     },
     currentBackSprite: function () {
-      return this.sprites && this.sprites[this.currentSpriteFormBack] ? this.getSpriteUrl(this.sprites[this.currentSpriteFormBack]) : null
+      return this.sprites && this.sprites[this.currentSpriteFormBack] ? getSpriteUrl(this.sprites[this.currentSpriteFormBack]) : null
     },
     hasDefault: function () {
       return this.sprites && this.sprites['front_default'] !== null
@@ -97,9 +98,6 @@ export default {
         .catch(error => {
           console.error(error)
         })
-    },
-    getSpriteUrl(spritePath) {
-      return 'https://raw.githubusercontent.com/PokeAPI/sprites/master' + spritePath.replace('/media', '')
     },
     onSpriteFormChange: function (event) {
       this.currentSpriteFormFront = event.currentTarget.getAttribute('data-front-sprite-form')
