@@ -12,6 +12,8 @@ npm install
 
 poke-vue fetches data from a local sqlite3 database. Electron needs to be re-built to include sqlite3, we're doing that via `electron-rebuild` (see [SO question](https://stackoverflow.com/questions/38716594/electron-app-cant-find-sqlite3-module))
 
+Python needs to be installed for this to work. I also wasn't able to run it in cygwin, had to run it in Powershell. Once ran, I was able to launch the app via cygwin though.
+
 ```
 ./node_modules/.bin/electron-rebuild -w sqlite3
 ```
