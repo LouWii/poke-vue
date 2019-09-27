@@ -83,6 +83,13 @@ export default {
       })
       return versionGroupIds
     }
+  },
+  watch: {
+    varietyId: {
+      handler: function() {
+        this.initVersionsDropdown()
+      }
+    }
   }
 }
 </script>
