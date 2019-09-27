@@ -42,7 +42,7 @@ export default {
   methods: {
     ...mapActions(['getPokemonSpecies']),
     initView: function() {
-      this.getPokemonSpecies(this.$route.params.id)
+      this.getPokemonSpecies(parseInt(this.$route.params.id, 10))
       .then(row => {
         this.pokemonSpecies = row
       })
