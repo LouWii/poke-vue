@@ -1,6 +1,6 @@
 <template>
   <div class="evolution-chain-species">
-    <router-link :to="{name: 'pokemon', params: {id: species.id}}">
+    <router-link :to="{name: 'pokemon', params: {id: species.id}}" exact-active-class="active-pokemon">
       <span class="species-item">
         <species-default-sprite :speciesId="species.id" />
         {{species.t_name||species.name}}
@@ -26,6 +26,8 @@ export default {
 
 <style lang="scss">
 .evolution-chain-species {
+  display: inline-block;
+
   .species-item {
     display: block;
     text-align: center;
@@ -35,6 +37,15 @@ export default {
     height: 60px;
     margin: 0 auto;
     width: 60px;
+  }
+
+  a {
+    display: block;
+  }
+
+  .active-pokemon {
+    @include remove-link-style;
+    pointer-events: none;
   }
 }
 </style>

@@ -93,6 +93,7 @@ export default {
     .species-column {
       flex: 1;
       min-width: 80px;
+      text-align: center;
     }
   }
 }

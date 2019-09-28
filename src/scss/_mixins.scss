@@ -1,0 +1,6 @@
+@mixin remove-link-style {
+  color: $font-color;
+  cursor: default;
+  font-style: normal;
+  text-decoration: none;
+}

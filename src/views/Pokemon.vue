@@ -62,12 +62,9 @@ export default {
 </script>
 
 <style lang="scss">
-  .pokemon-single {
-    label {
-      display: inline-block;
-      font-weight: bold;
-      margin: 5px 10px;
-    }
+  .pokemon {
+    padding-bottom: $padding-global;
+
     &.black {
       
     }
@@ -90,22 +87,5 @@ export default {
     &.yellow {
       
     }
-    header {
-      position: relative;
-      // text-align: center;
-      h3, .pokemon-varieties-sprites {
-        display: inline-block;
-        vertical-align: middle;
-      }
-      h3 {
-        text-transform: capitalize;
-      }
-      .close {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-      }
-    }
-    
   }
 </style>
