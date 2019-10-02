@@ -50,7 +50,6 @@ export default {
 
       this.getEvolutionChainSpecies(this.evolutionChainId)
         .then(species => {
-          console.log(species)
           const localBabyIds = []
           const localBaseIds = []
           const localEv1Ids = []

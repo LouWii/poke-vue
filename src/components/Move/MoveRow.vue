@@ -1,14 +1,16 @@
 <template>
-  <!-- <div class="move-row"> -->
-    <div class="move-row" v-if="move">
-      <div class="attr name">{{move.t_name||move.name}}</div>
-      <div v-if="pokemonMove && showLevel" class="attr level">{{pokemonMove.level}}</div>
-      <div class="attr pp">{{move.pp}}</div>
-      <div class="attr power">{{move.power||'-'}}</div>
-      <div class="attr accuracy">{{move.accuracy?move.accuracy+'%':'-'}}</div>
-      <div class="attr type">{{typeName}}</div>
+  <div class="move-row" v-if="move">
+    <div class="attr name">
+      <router-link :to="{name: 'move', params: {id: move.id}}">
+        {{move.t_name||move.name}}
+      </router-link>
     </div>
-  <!-- </div> -->
+    <div v-if="pokemonMove && showLevel" class="attr level">{{pokemonMove.level}}</div>
+    <div class="attr pp">{{move.pp}}</div>
+    <div class="attr power">{{move.power||'-'}}</div>
+    <div class="attr accuracy">{{move.accuracy?move.accuracy+'%':'-'}}</div>
+    <div class="attr type">{{typeName}}</div>
+  </div>
 </template>
 
 <script>

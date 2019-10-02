@@ -28,6 +28,7 @@ const getters = {
   allTypes: state => state.types,
   allVersions: state => state.versions,
   versionsFromVersionGroup: state => versionGroupId => state.versions.filter(version => version.version_group_id === versionGroupId),
+  generation: state => generationId => state.generations.find(g => g.id === generationId),
   generationVersionsName: state => generationId => {
     const versionsName = []
     if (state.generationsVersionIds[generationId]) {
@@ -90,43 +91,48 @@ const actions = {
       }
     })
   },
-  getGenerationsVersions({commit, dispatch, getters}) {
+  getGenerationsVersions({commit, dispatch, getters, rootState}) {
     return new Promise((resolve, reject) => {
       // Fetch all versions before doing anything
       dispatch('getVersions')
         .then(function() {
-          pokeDb.all(
-            `SELECT g.* FROM ${db.dbtableVersionGroup} AS g
-            ORDER BY g."order"`,
-            {},
-            (error, rows) => {
-              if (error) {
-                reject(error)
-              } else {
-                const generationsVersionIds = []
-                rows.forEach(row => {
-                  if (!generationsVersionIds[row.generation_id]) {
-                    generationsVersionIds[row.generation_id] = []
-                  }
-                  // Find the versions from that gen
-                  getters.versionsFromVersionGroup(row.id).forEach(version => generationsVersionIds[row.generation_id].push(version.id))
-                })
-                commit('SET_GENERATIONS_VERSIONS_IDS', generationsVersionIds)
+          if (rootState.pokemon.generationsVersionIds.length) {
+            
+          } else {
+            pokeDb.all(
+              `SELECT g.* FROM ${db.dbtableVersionGroup} AS g
+              ORDER BY g."order"`,
+              {},
+              (error, rows) => {
+                if (error) {
+                  reject(error)
+                } else {
+                  const generationsVersionIds = []
+                  rows.forEach(row => {
+                    if (!generationsVersionIds[row.generation_id]) {
+                      generationsVersionIds[row.generation_id] = []
+                    }
+                    // Find the versions from that gen
+                    getters.versionsFromVersionGroup(row.id).forEach(version => generationsVersionIds[row.generation_id].push(version.id))
+                  })
+                  commit('SET_GENERATIONS_VERSIONS_IDS', generationsVersionIds)
+                }
               }
-            }
-          )
+            )
+          }
         })
     })
   },
   getMove({rootState}, moveId) {
     return new Promise((resolve, reject) => {
-      if (rootState.pokemon.moves[moveId]) {
-        resolve(rootState.pokemon.moves[moveId])
+      if (rootState.pokemon.partialMoves[moveId]) {
+        resolve(rootState.pokemon.partialMoves[moveId])
       } else {
         pokeDb.get(
-          `SELECT m.* FROM ${db.dbtableMove} AS m
-          WHERE id = $moveId`,
-          {$moveId: moveId},
+          `SELECT m.*, t.name AS t_name FROM ${db.dbtableMove} AS m
+          LEFT OUTER JOIN ${db.dbtableMoveName} AS t ON m.id = t.move_id AND (t.language_id = $langId OR t.language_id IS NULL)
+          WHERE m.id = $moveId`,
+          {$langId: rootState.settings.userLanguage, $moveId: moveId},
           (error, row) => {
             if (error) {
               reject(error)

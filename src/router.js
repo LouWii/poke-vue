@@ -28,6 +28,11 @@ export default new Router({
       path: '/pokemon/:id',
       name: 'pokemon',
       component: () => import(/* webpackChunkName: "pokemonSingle" */ './views/Pokemon.vue')
-    }
+    },
+    {
+      path: '/move/:id',
+      name: 'move',
+      component: () => import(/* webpackChunkName: "moveSingle" */ './views/Move.vue')
+    },
   ]
 })
