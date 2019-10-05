@@ -5,6 +5,7 @@
     </header>
     <div class="" v-if="move">
       <move-attributes :move="move"/>
+      <move-target :moveTargetId="move.move_target_id" />
     </div>
   </div>
 </template>
@@ -12,10 +13,11 @@
 <script>
 import {mapActions} from 'vuex'
 import MoveAttributes from '@/components/Move/MoveAttributes'
+import MoveTarget from '@/components/Move/MoveTarget'
 
 export default {
   name: 'Move',
-  components: {MoveAttributes},
+  components: {MoveAttributes, MoveTarget},
   data: () => {
     return {
       move: null,

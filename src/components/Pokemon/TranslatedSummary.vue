@@ -45,7 +45,7 @@ export default {
     currentSummary: function () {
       if (this.summaries.length) {
         if (this.summaries[this.currentSummaryIndex].t_flavor_text) {
-          return this.summaries[this.currentSummaryIndex].t_flavor_text
+          return this.summaries[this.currentSummaryIndex].t_flavor_text.replace("\\n", ' ')
         }
         return this.summaries[this.currentSummaryIndex].flavor_text
       }
