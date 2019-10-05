@@ -227,10 +227,13 @@ const actions = {
         resolve(rootState.pokemon.moveTargets)
       } else {
         pokeDb.all(
-          `SELECT mt.*, mtt.name AS t_name FROM ${db.dbtableMoveTarget} AS mt
+          `SELECT mt.*, mtt.name AS t_name, mtte.name AS e_name FROM ${db.dbtableMoveTarget} AS mt
           LEFT OUTER JOIN ${db.dbtableMoveTargetName} AS mtt
-          ON mt.id = mtt.move_target_id AND (mtt.language_id = $langId OR mtt.language_id IS NULL)`,
-          {$langId: rootState.settings.userLanguage},
+          ON mt.id = mtt.move_target_id AND (mtt.language_id = $langId OR mtt.language_id IS NULL)
+          LEFT OUTER JOIN ${db.dbtableMoveTargetName} AS mtte
+          ON mt.id = mtte.move_target_id AND (mtte.language_id = $englishLangId OR mtte.language_id IS NULL)
+          `,
+          {$englishLangId: rootState.settings.englishLanguage, $langId: rootState.settings.userLanguage},
           (error, rows) => {
             if (error) {
               reject(error)

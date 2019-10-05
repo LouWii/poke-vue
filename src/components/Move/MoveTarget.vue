@@ -2,7 +2,7 @@
   <div class="move-target">
     <label>Target:</label>
     <div class="target-details">
-      {{moveTargetObj?moveTargetObj.t_name||moveTargetObj.name:'-'}}
+      {{moveTargetObj?moveTargetObj.t_name||moveTargetObj.e_name||moveTargetObj.name:'-'}}
       <br/>
       <span v-if="moveTargetDescription">
         {{moveTargetDescription.t_description||moveTargetDescription.description}}
