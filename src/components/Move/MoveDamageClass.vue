@@ -1,9 +1,8 @@
 <template>
   <div class="move-damage-class">
     <label>Move Damage Class:</label>
-    <div class="">
-      {{moveDamageClassName}}
-      <br/>
+    <div class="attribute-value">
+      <div class="damage-class-name">{{moveDamageClassName}}</div>
       <span v-if="moveDamageclassDescription">
         {{moveDamageclassDescription.t_description||moveDamageclassDescription.description}}
       </span>
@@ -53,3 +52,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.move-damage-class {
+  @extend .attribute-row;
+  margin: $padding-global-medium;
+
+  .damage-class-name {
+    margin-bottom: $margin-global-small;
+    text-transform: capitalize;
+  }
+  span {
+    font-style: italic;
+  }
+}
+</style>

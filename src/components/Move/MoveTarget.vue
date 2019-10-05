@@ -1,9 +1,10 @@
 <template>
   <div class="move-target">
     <label>Target:</label>
-    <div class="target-details">
-      {{moveTargetObj?moveTargetObj.t_name||moveTargetObj.e_name||moveTargetObj.name:'-'}}
-      <br/>
+    <div class="target-details attribute-value">
+      <div class="target-name">
+        {{moveTargetObj?moveTargetObj.t_name||moveTargetObj.e_name||moveTargetObj.name:'-'}}
+      </div>
       <span v-if="moveTargetDescription">
         {{moveTargetDescription.t_description||moveTargetDescription.description}}
       </span>
@@ -55,19 +56,13 @@ export default {
 
 <style lang="scss">
 .move-target {
-  padding: 0 $margin-global-medium;
-
-  label {
-    display: inline-block;
-    font-weight: bold;
-    min-width: 100px;
-  }
+  @extend .attribute-row;
+  margin: $padding-global-medium;
 
   .target-details {
-    display: inline-block;
-    max-width: calc(100% - 100px);
-    vertical-align: top;
-
+    .target-name {
+      margin-bottom: $margin-global-small;
+    }
     span {
       font-style: italic;
     }

@@ -1,22 +1,25 @@
 <template>
   <div class="move-attributes">
-    <div class="move-attribute">
+    <div class="move-attribute attribute-row">
       <label>Generation:</label>
-      <span>{{generationName}}  ({{generationVersionsStr}})</span>
+      <span class="attribute-value">{{generationName}}  ({{generationVersionsStr}})</span>
     </div>
     <div class="move-attribute">
-      <label>Type:</label><span v-if="typeName">{{typeName}}</span>
+      <label>Type:</label>
+      <span class="attribute-value" v-if="typeName">{{typeName}}</span>
     </div>
     <div class="move-attribute">
-      <label>Power:</label><span>{{move.power||'-'}}</span>
+      <label>Power:</label>
+      <span class="attribute-value">{{move.power||'-'}}</span>
     </div>
     <div class="move-attribute">
       <label>Accuracy:</label>
-      <span v-if="move.accuracy">{{move.accuracy}}%</span>
-      <span v-if="!move.accuracy">-</span>
+      <span class="attribute-value" v-if="move.accuracy">{{move.accuracy}}%</span>
+      <span class="attribute-value" v-if="!move.accuracy">-</span>
     </div>
     <div class="move-attribute">
-      <label>PP:</label><span>{{move.pp}}</span>
+      <label>PP:</label>
+      <span class="attribute-value">{{move.pp}}</span>
     </div>
   </div>
 </template>
@@ -66,13 +69,8 @@ export default {
 <style lang="scss">
 .move-attributes {
   .move-attribute {
+    @extend .attribute-row;
     margin: $margin-global-medium;
-
-    label {
-      display: inline-block;
-      font-weight: bold;
-      min-width: 100px;
-    }
   }
 }
 </style>

@@ -1,0 +1,12 @@
+.attribute-row {
+    display: flex;
+    label, .attribute-label {
+        display: block;
+        font-weight: bold;
+        width: $attributes-list-label-width;
+    }
+    .attribute-value {
+        display: block;
+        flex: 1;
+    }
+}
