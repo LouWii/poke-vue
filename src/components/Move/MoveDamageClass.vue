@@ -18,6 +18,9 @@ export default {
   props: {
     moveDamageClassId: {
       required: true,
+      validator: value => {
+        return !isNaN(value)
+      }
     },
   },
   data: () => {

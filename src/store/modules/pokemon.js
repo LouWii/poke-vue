@@ -16,6 +16,7 @@ const getInitialState = () => {
 
     partialMoves: [], // Contains moves (stored here when fetched, one at a time)
     partialMoveDamageClassDescriptions: [], // Contains move damage class descriptions; key is the move damage id
+    partialMoveFlavorText: [],
     partialMoveTargetDescriptions: [], // Contains Move Target Description (stored here when fetched, one at a time); key is the move target id
     partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id (when we fetch for a variety id)
     partialSpeciesToDefaultVariety: [], // Contains species id as key, its default variety as value
@@ -220,6 +221,35 @@ const actions = {
             } else {
               commit('ADD_MOVE_DAMAGE_CLASS_DESCRIPTION', row)
               resolve(row)
+            }
+          }
+        )
+      }
+    })
+  },
+  /**
+   * Get all flavor texts of a specific Move
+   * @param {*} param0 
+   * @param {Number} moveId 
+   */
+  getMoveFlavorText({commit, rootState}, moveId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.partialMoveFlavorText[moveId]) {
+        resolve(rootState.pokemon.partialMoveFlavorText[moveId])
+      } else {
+        pokeDb.all(
+          `SELECT mt.*, mtt.flavor_text as t_flavor_text
+          FROM ${db.dbtableMoveFlavorText} AS mt
+          LEFT JOIN ${db.dbtableMoveFlavorText} AS mtt 
+          ON mtt.move_id = mt.move_id AND mtt.version_group_id = mt.version_group_id AND (mtt.language_id = $langId OR mtt.language_id IS NULL)
+          WHERE mt.language_id = $englishLangId AND mt.move_id = $id`,
+          {$langId: rootState.settings.userLanguage, $englishLangId: rootState.settings.englishLanguage, $id: moveId},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('ADD_MOVE_FLAVOR_TEXT', rows)
+              resolve(rows)
             }
           }
         )
@@ -528,6 +558,13 @@ const mutations = {
       state.partialMoveDamageClassDescriptions,
       moveDamageClassDescription.move_damage_class_id,
       moveDamageClassDescription)
+  },
+  ADD_MOVE_FLAVOR_TEXT(state, moveFlavorTexts) {
+    Vue.set(
+      state.partialMoveFlavorText,
+      moveFlavorTexts[0].moveId,
+      moveFlavorTexts
+    )
   },
   ADD_MOVE_TARGET_DESCRIPTION(state, moveTargetDescription) {
     Vue.set(

@@ -1,9 +1,9 @@
 <template>
-  <div class="pokemon-summary">
+  <div class="move-translated-summary">
     <div v-if="summaries.length != 0" class="summary-content">
       <div class="summary">{{ currentSummary }}</div>
       <div class="versions">
-        <inline-list :versionIds="currentSummaryVersions" />
+        <span v-for="version in currentSummaryVersions" :key="version.id">{{version.name}}</span>
       </div>
     </div>
     <div v-if="summaries.length != 0" class="controls">
@@ -18,14 +18,12 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
-import InlineList from '@/components/Version/InlineList'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'TranslatedSummary',
-  components: {InlineList},
   props: {
-    speciesId: {
+    moveId: {
       required: true,
       validator: value => {
         return !isNaN(value)
@@ -38,10 +36,11 @@ export default {
       summaries: []
     }
   },
-  beforeMount: function() {
-    this.initFlavorTexts()
+  beforeMount() {
+    this.initComponent()
   },
   computed: {
+    ...mapGetters(['versionsFromVersionGroup']),
     currentSummary: function () {
       if (this.summaries.length) {
         if (this.summaries[this.currentSummaryIndex].t_flavor_text) {
@@ -52,31 +51,35 @@ export default {
       return null;
     },
     currentSummaryVersions: function() {
-      return this.summaries.length ? this.summaries[this.currentSummaryIndex].versions : []
+      const versions = []
+      this.summaries[this.currentSummaryIndex].versionGroups.forEach(vgId => {
+        this.versionsFromVersionGroup(vgId).forEach(v => versions.push(v))
+      })
+      return versions
     }
   },
   methods: {
-    ...mapActions(['getPokemonSpeciesFlavorTexts']),
-    initFlavorTexts() {
+    ...mapActions(['getMoveFlavorText']),
+    initComponent: function() {
       this
-        .getPokemonSpeciesFlavorTexts(this.speciesId)
-        .then(rows => {
-
-          // Group by english flavor text (sometime the same between versions)
+        .getMoveFlavorText(this.moveId)
+        .then(fTexts => {
           let flavorTexts = []
-          rows.forEach(flavorTextRow => {
-            const idx = flavorTexts
-              .findIndex(flavorText => flavorText.flavor_text === flavorTextRow.flavor_text)
-            if (-1 !== idx) {
-              flavorTexts[idx].versions.push(flavorTextRow.version_id)
+
+          // Group flavor texts by text (as sometime the text is the same for multiple version groups)
+          fTexts.forEach(fText => {
+            const searchIdx = flavorTexts.findIndex(ft => ft.flavor_text === fText.flavor_text)
+            if (-1 !== searchIdx) {
+              flavorTexts[searchIdx].versionGroups.push(fText.version_group_id)
             } else {
               flavorTexts.push({
-                flavor_text: flavorTextRow.flavor_text,
-                t_flavor_text: flavorTextRow.t_flavor_text,
-                versions: [flavorTextRow.version_id]
+                flavor_text: fText.flavor_text,
+                t_flavor_text: fText.t_flavor_text,
+                versionGroups: [fText.version_group_id]
               })
             }
-          });
+          })
+
           this.summaries = flavorTexts
         })
         .catch(error => {
@@ -89,12 +92,12 @@ export default {
     },
     onControlRight () {
       this.currentSummaryIndex = (this.currentSummaryIndex + 1) % (this.summaries.length)
-    }
+    },
   },
   watch: {
-    speciesId: {
+    moveId: {
       handler: function() {
-        this.initFlavorTexts()
+        this.initComponent()
       }
     }
   }
@@ -102,13 +105,9 @@ export default {
 </script>
 
 <style lang="scss">
-.pokemon-summary {
-  margin-bottom: 15px;
-  padding: 0 $padding-global;
+.move-translated-summary {
+  padding: 0 $padding-global-medium;
 
-  .summary-content {
-    // min-height: 80px;
-  }
   .versions {
     margin-top: 5px;
     text-align: right;
@@ -125,11 +124,6 @@ export default {
           margin-right: 5px;
         }
       }
-    }
-  }
-  .controls {
-    button {
-      font-size: 24px;
     }
   }
 }

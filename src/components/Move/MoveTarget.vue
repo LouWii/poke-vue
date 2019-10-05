@@ -20,6 +20,9 @@ export default {
   props: {
     moveTargetId: {
       required: true,
+      validator: value => {
+        return !isNaN(value)
+      }
     },
   },
   data: () => {

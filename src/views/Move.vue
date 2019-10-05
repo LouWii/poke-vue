@@ -3,6 +3,8 @@
     <header v-if="move">
       <h3>{{ move.t_name }}</h3>
     </header>
+    <translated-summary v-if="move" :moveId="move.id" />
+    <hr/>
     <div class="" v-if="move">
       <move-attributes :move="move"/>
       <move-damage-class :moveDamageClassId="move.move_damage_class_id" />
@@ -16,10 +18,11 @@ import {mapActions} from 'vuex'
 import MoveAttributes from '@/components/Move/MoveAttributes'
 import MoveDamageClass from '@/components/Move/MoveDamageClass'
 import MoveTarget from '@/components/Move/MoveTarget'
+import TranslatedSummary from '@/components/Move/TranslatedSummary'
 
 export default {
   name: 'Move',
-  components: {MoveAttributes, MoveDamageClass, MoveTarget},
+  components: {MoveAttributes, MoveDamageClass, MoveTarget, TranslatedSummary},
   data: () => {
     return {
       move: null,
