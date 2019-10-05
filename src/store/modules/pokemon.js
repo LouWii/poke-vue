@@ -7,6 +7,7 @@ const getInitialState = () => {
   return {
     generations: [], // Contains ALL generations, or none
     generationsVersionIds: [], // Contains ALL version Ids for all generation Ids
+    moveDamageClasses: [], // Contains ALL move damage classes
     moveLearnMethods: [], // Contains ALL move learn methods, or none
     moveTargets: [], // Contains ALL move targets, or none
     species: [], // Contains ALL species, or none
@@ -14,7 +15,8 @@ const getInitialState = () => {
     versions: [], // Contains ALL versions, or none
 
     partialMoves: [], // Contains moves (stored here when fetched, one at a time)
-    partialMoveTargetDescription: [], // Contains Move Target Description (stored here when fetched, one at a time); key is the move target id
+    partialMoveDamageClassDescriptions: [], // Contains move damage class descriptions; key is the move damage id
+    partialMoveTargetDescriptions: [], // Contains Move Target Description (stored here when fetched, one at a time); key is the move target id
     partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id (when we fetch for a variety id)
     partialSpeciesToDefaultVariety: [], // Contains species id as key, its default variety as value
   }
@@ -44,6 +46,7 @@ const getters = {
     }
     return versionsName
   },
+  moveDamageClass: state => moveDamageClassId => state.moveDamageClasses.find(md => md.id === moveDamageClassId),
   moveLearnMethod: state => moveLearnMethodId => state.moveLearnMethods.find(mlMethod => mlMethod.id === moveLearnMethodId),
   movesFromIds: state => moveIds => {
     const tempArr = []
@@ -176,6 +179,53 @@ const actions = {
       }
     })
   },
+  getMoveDamageClasses({commit, rootState}) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.moveDamageClasses.length) {
+        resolve(rootState.pokemon.moveDamageClasses)
+      } else {
+        pokeDb.all(
+          `SELECT md.*, mdt.name AS t_name, mdte.name AS e_name FROM ${db.dbtableMoveDamageClass} AS md
+          LEFT OUTER JOIN ${db.dbtableMoveDamageClassName} AS mdt
+          ON md.id = mdt.move_damage_class_id AND (mdt.language_id = $langId OR mdt.language_id IS NULL)
+          LEFT OUTER JOIN ${db.dbtableMoveDamageClassName} AS mdte
+          ON md.id = mdte.move_damage_class_id AND (mdte.language_id = $englishLangId OR mdte.language_id IS NULL)`,
+          {$englishLangId: rootState.settings.englishLanguage, $langId: rootState.settings.userLanguage},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('SET_MOVE_DAMAGE_CLASSES', rows)
+              resolve(rows)
+            }
+          }
+        )
+      }
+    })
+  },
+  getMoveDamageClassDescription({commit, rootState}, moveDamageClassId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.partialMoveDamageClassDescriptions[moveDamageClassId]) {
+        resolve(rootState.pokemon.partialMoveDamageClassDescriptions[moveDamageClassId])
+      } else {
+        pokeDb.get(
+          `SELECT dc.*, dct.description AS t_description FROM ${db.dbtableMoveDamageClassDescription} AS dc
+          LEFT JOIN ${db.dbtableMoveDamageClassDescription} AS dct 
+          ON dct.move_damage_class_id = dc.move_damage_class_id AND (dct.language_id = $langId OR dct.language_id IS NULL)
+          WHERE dc.move_damage_class_id = $moveDamageClassId AND dc.language_id = $englishLangId`,
+          {$langId: rootState.settings.userLanguage, $englishLangId: rootState.settings.englishLanguage, $moveDamageClassId: moveDamageClassId},
+          (error, row) => {
+            if (error) {
+              reject(error)
+            } else {
+              commit('ADD_MOVE_DAMAGE_CLASS_DESCRIPTION', row)
+              resolve(row)
+            }
+          }
+        )
+      }
+    })
+  },
   getMoveLearnMethods({commit, rootState}) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.moveLearnMethods.length) {
@@ -200,8 +250,8 @@ const actions = {
   },
   getMoveTargetDescription({commit, rootState}, moveTargetId) {
     return new Promise((resolve, reject) => {
-      if (rootState.pokemon.partialMoveTargetDescription[moveTargetId]) {
-        resolve(rootState.pokemon.partialMoveTargetDescription[moveTargetId])
+      if (rootState.pokemon.partialMoveTargetDescriptions[moveTargetId]) {
+        resolve(rootState.pokemon.partialMoveTargetDescriptions[moveTargetId])
       } else {
         pokeDb.get(
           `SELECT td.*, tdt.description AS t_description FROM ${db.dbtableMoveTargetDescription} AS td
@@ -473,9 +523,15 @@ const mutations = {
   ADD_MOVE(state, move) {
     Vue.set(state.partialMoves, move.id, move)
   },
+  ADD_MOVE_DAMAGE_CLASS_DESCRIPTION(state, moveDamageClassDescription) {
+    Vue.set(
+      state.partialMoveDamageClassDescriptions,
+      moveDamageClassDescription.move_damage_class_id,
+      moveDamageClassDescription)
+  },
   ADD_MOVE_TARGET_DESCRIPTION(state, moveTargetDescription) {
     Vue.set(
-      state.partialMoveTargetDescription,
+      state.partialMoveTargetDescriptions,
       moveTargetDescription.move_target_id,
       moveTargetDescription)
   },
@@ -490,6 +546,9 @@ const mutations = {
   },
   SET_GENERATIONS_VERSIONS_IDS(state, generationsVersionIds) {
     Vue.set(state, 'generationsVersionIds', generationsVersionIds)
+  },
+  SET_MOVE_DAMAGE_CLASSES(state, moveDamageClasses) {
+    Vue.set(state, 'moveDamageClasses', moveDamageClasses)
   },
   SET_MOVE_LEARN_METHODS(state, moveLearnMethods) {
     Vue.set(state, 'moveLearnMethods', moveLearnMethods)
