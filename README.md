@@ -1,6 +1,14 @@
 # poke-vue
 
-> A Pokedex built with Vue with language support, based on [PokeAPI](https://pokeapi.co/) data.
+> A Pokedex built with Vue with translation support, based on [PokeAPI](https://pokeapi.co/) data.
+
+## About translations
+
+All the content of the app is based on poke api data. Official translations are sometimes missing, the app will fallback to english in such cases.
+
+## Want a feature? Missing data? Found a bug?
+
+[Submit a ticket](/issues/new). Make sure to write down all the information you can. Screenshots can also help.
 
 ## Project setup
 

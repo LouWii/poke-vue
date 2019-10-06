@@ -11,23 +11,27 @@
         <img :src="currentBackSprite" alt="" />
       </div>
     </div>
-    <div class="pokemon-variety-sprites-nav" v-if="displayVarietyFormMenu">
+    <div class="pokemon-variety-sprites-nav" v-if="displaySpritesButtons">
       <button
+        :class="currentSpriteFormFront=='front_default'?'active':''"
         data-front-sprite-form="front_default"
         data-back-sprite-form="back_default"
         v-if="hasDefault"
         @click="onSpriteFormChange"><span v-if="hasFemale">Male</span><span v-else>Default</span></button>
       <button
+        :class="currentSpriteFormFront=='front_female'?'active':''"
         data-front-sprite-form="front_female"
         data-back-sprite-form="back_female"
         v-if="hasFemale"
         @click="onSpriteFormChange">Female</button>
       <button
+        :class="currentSpriteFormFront=='front_shiny'?'active':''"
         data-front-sprite-form="front_shiny"
         data-back-sprite-form="back_shiny"
         v-if="hasShinyDefault"
         @click="onSpriteFormChange"><span v-if="hasFemale">Shiny Male</span><span v-else>Shiny</span></button>
       <button
+        :class="currentSpriteFormFront=='front_shiny_female'?'active':''"
         data-front-sprite-form="front_shiny_female"
         data-back-sprite-form="back_shiny_female"
         v-if="hasShinyFemale"
@@ -74,6 +78,9 @@ export default {
     },
     currentBackSprite: function () {
       return this.sprites && this.sprites[this.currentSpriteFormBack] ? getSpriteUrl(this.sprites[this.currentSpriteFormBack]) : null
+    },
+    displaySpritesButtons: function () {
+      return this.displayVarietyFormMenu && (this.hasFemale || this.hasShinyDefault || this.hasShinyFemale)
     },
     hasDefault: function () {
       return this.sprites && this.sprites['front_default'] !== null

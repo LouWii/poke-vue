@@ -97,7 +97,6 @@ export default {
 <style lang="scss">
 .variety-moves {
   margin-top: $margin-global;
-  padding: 0 0.5rem;
   h3 {
     margin: 0;
   }

@@ -1,8 +1,6 @@
 <template>
   <div class="pokemon">
     <header v-if="pokemonSpecies">
-      <!-- Need to fetch the default variety for the Species and then display the default front sprite -->
-      <!-- <poke-variety-sprites :varietyId="currentPokemonDefaultVarietyId" :displayFrontOnly="true"></poke-variety-sprites> -->
       <h3>
         <translated-name :pokemon="pokemonSpecies"/>
       </h3>
@@ -13,8 +11,7 @@
         <hr/>
         <!-- <div class="genera"><label>Genus</label> {{currentPokemonGenera}}</div> -->
       </div>
-      <!-- <poke-varieties v-if="currentPokemon" :pokemon="currentPokemon"></poke-varieties> -->
-      <varieties :speciesId="$route.params.id"/>
+      <varieties :speciesId="$route.params.id" :translatedSpeciesName="pokemonSpecies.t_name" />
       <evolution-chain :evolutionChainId="pokemonSpecies.evolution_chain_id"/>
     </section>
   </div>
@@ -64,6 +61,12 @@ export default {
 <style lang="scss">
   .pokemon {
     padding-bottom: $padding-global;
+
+    header {
+      h3 {
+        margin: $padding-global-medium $padding-global;
+      }
+    }
 
     &.black {
       

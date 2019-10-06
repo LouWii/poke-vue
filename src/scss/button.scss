@@ -11,6 +11,7 @@ button {
     }
 
     &:hover {
+        background: #d5d5d5;
         .svg-inline--fa {
             color: $pokedex-blue-dark;
         }
@@ -31,5 +32,10 @@ button {
 
     .svg-inline--fa {
         color: transparentize($pokedex-blue-dark, 0.2);
+    }
+
+    &.active {
+        background: $pokedex-blue-dark;
+        color: #fff;
     }
 }

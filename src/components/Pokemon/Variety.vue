@@ -8,8 +8,10 @@
     <div class="variety-details" v-if="variety">
       <!-- <poke-variety-sprites :varietyId="pokemonVarietyId" :displayVarietyFormMenu="true"></poke-variety-sprites> -->
       <pokemon-sprites :varietyId="variety.id" :displayVarietyFormMenu="true" />
-      <div class=""><label>Height</label><span>{{ variety.height }}</span></div>
-      <div class=""><label>Weight</label><span>{{ variety.height }}</span></div>
+      <div class="variety-attributes">
+        <div class="variety-attribute"><label>Height</label><span>{{ variety.height }}</span></div>
+        <div class="variety-attribute"><label>Weight</label><span>{{ variety.weight }}</span></div>
+      </div>
     </div>
     <div class="moves">
       <variety-moves :varietyId="variety.id" />
@@ -46,6 +48,8 @@ export default {
 
 <style lang="scss">
 .pokemon-variety {
+  padding: 0 $padding-global;
+
   header {
     h4 {
       text-transform: capitalize
@@ -67,6 +71,12 @@ export default {
           }
         }
       }
+    }
+  }
+  .variety-attributes {
+    .variety-attribute {
+      @extend .attribute-row;
+      margin: $margin-global-small 0;
     }
   }
 }

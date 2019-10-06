@@ -84,6 +84,8 @@ export default {
 
 <style lang="scss">
 .evolution-chain {
+  padding: 0 $padding-global;
+
   .evolutions-container {
     display: flex;
     flex-direction: row;

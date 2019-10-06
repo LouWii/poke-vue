@@ -4,7 +4,7 @@
       <div class="selector">
         <ul>
           <li v-for="(pVariety, index) in varieties" :key="pVariety.id">
-            <button :data-variety-index="index" @click="selectVariety">{{ pVariety.name }}</button>
+            <button :class="index==selectedVarietyIndex?'active':''" :data-variety-index="index" @click="selectVariety">{{getVarietyTranslatedName(pVariety.name)}}</button>
           </li>
         </ul>
       </div>
@@ -28,6 +28,10 @@ export default {
       validator: value => {
         return !isNaN(value)
       }
+    },
+    translatedSpeciesName: {
+      required: false,
+      type: String,
     }
   },
   data: () => {
@@ -46,6 +50,14 @@ export default {
   },
   methods: {
     ...mapActions(['getPokemons']),
+    getVarietyTranslatedName(name) {
+      let transName = name
+      if (this.translatedSpeciesName) {
+        const defaultVariety = this.varieties.find(v => v.is_default)
+        transName = transName.replace(defaultVariety.name, this.translatedSpeciesName)
+      }
+      return transName.replace(/\-/g, ' ')
+    },
     initVarieties: function() {
       this.getPokemons({filters: {pokemon_species_id: this.speciesId}})
       .then(rows => {

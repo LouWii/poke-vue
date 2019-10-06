@@ -3,7 +3,7 @@
     <div v-if="summaries.length != 0" class="summary-content">
       <div class="summary">{{ currentSummary }}</div>
       <div class="versions">
-        <span v-for="version in currentSummaryVersions" :key="version.id">{{version.name}}</span>
+        <span v-for="version in currentSummaryVersions" :key="version.id">{{version.t_name||version.name}}</span>
       </div>
     </div>
     <div v-if="summaries.length != 0" class="controls">
