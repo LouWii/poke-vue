@@ -9,6 +9,11 @@
       <!-- <poke-variety-sprites :varietyId="pokemonVarietyId" :displayVarietyFormMenu="true"></poke-variety-sprites> -->
       <pokemon-sprites :varietyId="variety.id" :displayVarietyFormMenu="true" />
       <div class="variety-attributes">
+        <div class="variety-attribute">
+          <label v-if="1 === types.length">Type</label>
+          <label v-else>Types</label>
+          <type-label v-for="type in types" :key="type.id" :type="type"/>
+        </div>
         <div class="variety-attribute"><label>Height</label><span>{{ variety.height }}</span></div>
         <div class="variety-attribute"><label>Weight</label><span>{{ variety.weight }}</span></div>
       </div>
@@ -23,10 +28,11 @@
 import {mapActions} from 'vuex'
 import VarietyMoves from '@/components/Pokemon/VarietyMoves'
 import PokemonSprites from '@/components/Pokemon/PokemonSprites'
+import TypeLabel from '@/components/Type/TypeLabel'
 
 export default {
   name: 'Variety',
-  components: {PokemonSprites, VarietyMoves},
+  components: {PokemonSprites, TypeLabel, VarietyMoves},
   props: {
     pokemonHasMultiple: {
       type: Boolean,
@@ -37,11 +43,17 @@ export default {
       required: true
     }
   },
+  data: () => {
+    return {
+      types: [],
+    }
+  },
   beforeMount: function() {
     this.getPokemonMoves(this.variety.id)
+    this.getPokemonTypes(this.variety.id).then(types => this.types = types)
   },
   methods: {
-    ...mapActions(['getPokemonMoves'])
+    ...mapActions(['getPokemonMoves', 'getPokemonTypes'])
   }
 }
 </script>

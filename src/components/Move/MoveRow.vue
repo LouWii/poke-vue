@@ -9,15 +9,17 @@
     <div class="attr pp">{{move.pp}}</div>
     <div class="attr power">{{move.power||'-'}}</div>
     <div class="attr accuracy">{{move.accuracy?move.accuracy+'%':'-'}}</div>
-    <div class="attr type">{{typeName}}</div>
+    <div class="attr type"><type-label :type="moveType"/></div>
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import TypeLabel from '@/components/Type/TypeLabel'
 
 export default {
   name: 'MoveRow',
+  components: {TypeLabel},
   props: {
     move: {
       type: Object,
@@ -38,6 +40,9 @@ export default {
   },
   computed: {
     ...mapGetters(['allTypes', 'type']),
+    moveType: function() {
+      return this.type(this.move.type_id)
+    },
     typeName: function() {
       const type = this.type(this.move.type_id)
       return type?type.t_name||type.name:'-'

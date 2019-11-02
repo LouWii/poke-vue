@@ -19,6 +19,7 @@ const getInitialState = () => {
     partialMoveFlavorText: [],
     partialMoveTargetDescriptions: [], // Contains Move Target Description (stored here when fetched, one at a time); key is the move target id
     partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id (when we fetch for a variety id)
+    partialPokemonTypes: [], // Contains list of types for each Pokemon Variety id
     partialSpeciesToDefaultVariety: [], // Contains species id as key, its default variety as value
   }
 }
@@ -105,7 +106,7 @@ const actions = {
       dispatch('getVersions')
         .then(function() {
           if (rootState.pokemon.generationsVersionIds.length) {
-            
+            resolve(rootState.pokemon.generationsVersionIds.length)
           } else {
             pokeDb.all(
               `SELECT g.* FROM ${db.dbtableVersionGroup} AS g
@@ -124,6 +125,7 @@ const actions = {
                     getters.versionsFromVersionGroup(row.id).forEach(version => generationsVersionIds[row.generation_id].push(version.id))
                   })
                   commit('SET_GENERATIONS_VERSIONS_IDS', generationsVersionIds)
+                  resolve(generationsVersionIds)
                 }
               }
             )
@@ -471,6 +473,40 @@ const actions = {
       )
     })
   },
+  getPokemonTypes({commit, dispatch, getters, rootState}, varietyId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.partialPokemonTypes[varietyId]) {
+        resolve(rootState.pokemon.partialPokemonTypes[varietyId])
+      } else {
+        // Make sure we have loaded all the types first
+        dispatch('getTypes')
+          .then(() => {
+            pokeDb.all(
+              `SELECT pt.*
+              FROM ${db.dbtablePokemonType} as pt
+              WHERE pt.pokemon_id = $pokemonId
+              ORDER BY pt.slot ASC`,
+              {$pokemonId: varietyId},
+              (error, rows) => {
+                if (error) {
+                  reject(error)
+                } else {
+                  const pTypes = []
+                  rows.forEach(row => {
+                    pTypes.push(getters.type(row.type_id))
+                  })
+                  commit('ADD_POKEMON_TYPES', {varietyId, types: pTypes})
+                  resolve(pTypes)
+                }
+              }
+            )
+          })
+          .catch(error => {
+            reject(error)
+          })
+      }
+    })
+  },
   getSpeciesDefaultVariety({commit, rootState}, speciesId) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.partialSpeciesToDefaultVariety[speciesId]) {
@@ -574,6 +610,9 @@ const mutations = {
   },
   ADD_POKEMON_MOVES(state, payload) {
     Vue.set(state.partialPokemonMoves, payload.pokemonId, payload.moves)
+  },
+  ADD_POKEMON_TYPES(state, payload) {
+    Vue.set(state.partialPokemonTypes, payload.varietyId, payload.types)
   },
   ADD_SPECIES_DEFAULT_VARIETY(state, payload) {
     Vue.set(state.partialSpeciesToDefaultVariety, payload.speciesId, payload.varietyId)

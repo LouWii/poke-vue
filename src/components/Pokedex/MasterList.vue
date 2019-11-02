@@ -37,12 +37,13 @@
     beforeMount: function() {
       this.getTypes()
       this.getPokemonsSpecies()
-        .then(rows => {
-          this.pokemonList = rows
-        })
+        
         .catch(error => {
           console.error(error)
         })
+        setTimeout(function(){
+          console.log(this.getFilteredSpecies)
+        }.bind(this), 1500)
     },
     computed: {
       ...mapGetters(['getFilteredSpecies']),

@@ -1,6 +1,6 @@
 # poke-vue
 
-> A Pokedex built with Vue with translation support, based on [PokeAPI](https://pokeapi.co/) data.
+> A Pokedex built with Vue with translation support, based on [PokeAPI](https://pokeapi.co/) data (which is itself based on [Veekun's data](https://veekun.com/dex))
 
 ## About translations
 

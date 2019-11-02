@@ -56,7 +56,7 @@ export default {
         const defaultVariety = this.varieties.find(v => v.is_default)
         transName = transName.replace(defaultVariety.name, this.translatedSpeciesName)
       }
-      return transName.replace(/\-/g, ' ')
+      return transName.replace(/-/g, ' ')
     },
     initVarieties: function() {
       this.getPokemons({filters: {pokemon_species_id: this.speciesId}})
@@ -94,6 +94,9 @@ export default {
       }
       li {
         padding: 5px 15px;
+        button {
+          text-transform: capitalize;
+        }
       }
     }
   }

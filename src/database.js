@@ -28,6 +28,7 @@ export const dbtablePokemonSpeciesDescription = dbTablePrefix + 'pokemonspeciesd
 export const dbtablePokemonSpeciesFlavorText  = dbTablePrefix + 'pokemonspeciesflavortext'
 export const dbtablePokemonSpeciesName        = dbTablePrefix + 'pokemonspeciesname'
 export const dbtablePokemonSprites            = dbTablePrefix + 'pokemonsprites'
+export const dbtablePokemonType               = dbTablePrefix + 'pokemontype'
 export const dbtableType                      = dbTablePrefix + 'type'
 export const dbtableTypeName                  = dbTablePrefix + 'typename'
 export const dbtableVersion                   = dbTablePrefix + 'version'
