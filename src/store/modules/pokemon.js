@@ -11,6 +11,7 @@ const getInitialState = () => {
     moveLearnMethods: [], // Contains ALL move learn methods, or none
     moveTargets: [], // Contains ALL move targets, or none
     species: [], // Contains ALL species, or none
+    stats: [], // Contains ALL stats (stats type/names only)
     types: [], // Contains ALL types, or none
     versions: [], // Contains ALL versions, or none
 
@@ -19,6 +20,7 @@ const getInitialState = () => {
     partialMoveFlavorText: [],
     partialMoveTargetDescriptions: [], // Contains Move Target Description (stored here when fetched, one at a time); key is the move target id
     partialPokemonMoves: [], // Contains all PokemonMoves for each Pokemon Variety id (when we fetch for a variety id)
+    partialPokemonStats: [], // Contains all stats for each Pokemon Variety id
     partialPokemonTypes: [], // Contains list of types for each Pokemon Variety id
     partialSpeciesToDefaultVariety: [], // Contains species id as key, its default variety as value
   }
@@ -56,6 +58,18 @@ const getters = {
     return tempArr
   },
   moveTarget: state => moveTargetId => state.moveTargets.find(mt => mt.id === moveTargetId),
+  statName: state => statId => {
+    if (state.stats[statId]) {
+      if (state.stats[statId].t_name) {
+        return state.stats[statId].t_name
+      }
+      if (state.stats[statId].e_name) {
+        return state.stats[statId].e_name
+      }
+      return state.stats[statId].name
+    }
+    return ''
+  },
   pokemonMoves: state => pokemonId => state.partialPokemonMoves[pokemonId]?state.partialPokemonMoves[pokemonId]:[],
   type: state => typeId => state.types.find(type => type.id === typeId)
 }
@@ -473,6 +487,33 @@ const actions = {
       )
     })
   },
+  getPokemonStats({commit, dispatch, rootState}, varietyId) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.partialPokemonStats[varietyId]) {
+        resolve(rootState.pokemon.partialPokemonStats[varietyId])
+      } else {
+        // Make sure we have loaded all the stats first
+        dispatch('getStats')
+        .then(() => {
+          pokeDb.all(
+            `SELECT ps.*
+            FROM ${db.dbtablePokemonStat} AS ps
+            WHERE ps.pokemon_id = $pokemonId
+            ORDER BY stat_id ASC`,
+            {$pokemonId: varietyId},
+            (error, stats) => {
+              if (error) {
+                reject(error)
+              } else {
+                commit('ADD_POKEMON_STATS', {varietyId, stats})
+                resolve(stats)
+              }
+            }
+          )
+        })
+      }
+    })
+  },
   getPokemonTypes({commit, dispatch, getters, rootState}, varietyId) {
     return new Promise((resolve, reject) => {
       if (rootState.pokemon.partialPokemonTypes[varietyId]) {
@@ -523,6 +564,35 @@ const actions = {
             } else {
               commit('ADD_SPECIES_DEFAULT_VARIETY', {speciesId, varietyId: row.id})
               resolve(row.id)
+            }
+          }
+        )
+      }
+    })
+  },
+  getStats({commit, rootState}) {
+    return new Promise((resolve, reject) => {
+      if (rootState.pokemon.stats.length) {
+        resolve(rootState.pokemon.stats)
+      } else {
+        pokeDb.all(
+          `SELECT s.*, sn.name AS t_name, sne.name AS e_name
+          FROM ${db.dbtableStat} AS s
+          LEFT OUTER JOIN ${db.dbtableStatName} AS sn
+          ON s.id = sn.stat_id AND (sn.language_id = $langId OR sn.language_id IS NULL)
+          LEFT OUTER JOIN ${db.dbtableStatName} AS sne
+          ON s.id = sne.stat_id AND (sne.language_id = $englishLangId OR sne.language_id IS NULL)`,
+          {$langId: rootState.settings.userLanguage, $englishLangId: rootState.settings.englishLanguage},
+          (error, rows) => {
+            if (error) {
+              reject(error)
+            } else {
+              let indexedStats = []
+              rows.forEach(stat => {
+                indexedStats[stat.id] = stat
+              })
+              commit('SET_STATS', indexedStats)
+              resolve(rows)
             }
           }
         )
@@ -611,6 +681,9 @@ const mutations = {
   ADD_POKEMON_MOVES(state, payload) {
     Vue.set(state.partialPokemonMoves, payload.pokemonId, payload.moves)
   },
+  ADD_POKEMON_STATS(state, payload) {
+    Vue.set(state.partialPokemonStats, payload.varietyId, payload.stats)
+  },
   ADD_POKEMON_TYPES(state, payload) {
     Vue.set(state.partialPokemonTypes, payload.varietyId, payload.types)
   },
@@ -634,6 +707,9 @@ const mutations = {
   },
   SET_SPECIES(state, species) {
     Vue.set(state, 'species', species)
+  },
+  SET_STATS(state, stats) {
+    Vue.set(state, 'stats', stats)
   },
   SET_TYPES(state, types) {
     Vue.set(state, 'types', types)

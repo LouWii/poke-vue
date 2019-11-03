@@ -18,6 +18,9 @@
         <div class="variety-attribute"><label>Weight</label><span>{{ variety.weight }}</span></div>
       </div>
     </div>
+    <div class="stats">
+      <variety-stats :varietyId="variety.id" />
+    </div>
     <div class="moves">
       <variety-moves :varietyId="variety.id" />
     </div>
@@ -27,12 +30,13 @@
 <script>
 import {mapActions} from 'vuex'
 import VarietyMoves from '@/components/Pokemon/VarietyMoves'
+import VarietyStats from '@/components/Pokemon/VarietyStats'
 import PokemonSprites from '@/components/Pokemon/PokemonSprites'
 import TypeLabel from '@/components/Type/TypeLabel'
 
 export default {
   name: 'Variety',
-  components: {PokemonSprites, TypeLabel, VarietyMoves},
+  components: {PokemonSprites, TypeLabel, VarietyMoves, VarietyStats},
   props: {
     pokemonHasMultiple: {
       type: Boolean,
