@@ -57,6 +57,7 @@ export default {
 <style lang="scss">
 .move-row {
   display: table-row;
+  font-size: 14px;
 
   &:nth-child(2n+1) {
     background: transparentize($color: $pokedex-blue, $amount: .9);

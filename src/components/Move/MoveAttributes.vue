@@ -6,7 +6,7 @@
     </div>
     <div class="move-attribute">
       <label>Type:</label>
-      <span class="attribute-value" v-if="typeName">{{typeName}}</span>
+      <span class="attribute-value" v-if="moveType"><type-label :type="moveType" /></span>
     </div>
     <div class="move-attribute">
       <label>Power:</label>
@@ -26,9 +26,11 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import TypeLabel from '@/components/Type/TypeLabel'
 
 export default {
   name: 'MoveAttributes',
+  components: { TypeLabel },
   props: {
     move: {
       type: Object,
@@ -55,9 +57,8 @@ export default {
     generationVersionsStr: function() {
       return this.generationVersionsName(this.move.generation_id).join(', ')
     },
-    typeName: function() {
-      const type = this.type(this.move.type_id)
-      return type?type.t_name||type.name:'-'
+    moveType: function() {
+      return this.type(this.move.type_id)
     }
   },
   methods: {

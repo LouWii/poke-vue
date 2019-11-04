@@ -37,7 +37,6 @@
     beforeMount: function() {
       this.getTypes()
       this.getPokemonsSpecies()
-        
         .catch(error => {
           console.error(error)
         })

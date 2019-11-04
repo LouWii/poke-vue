@@ -108,6 +108,12 @@ export default {
 .move-translated-summary {
   padding: 0 $padding-global-medium;
 
+  .controls {
+    button {
+      font-size: 24px;
+    }
+  }
+
   .versions {
     margin-top: 5px;
     text-align: right;

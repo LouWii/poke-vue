@@ -494,7 +494,7 @@ const actions = {
       } else {
         // Make sure we have loaded all the stats first
         dispatch('getStats')
-        .then(() => {
+        .then((stats) => {
           pokeDb.all(
             `SELECT ps.*
             FROM ${db.dbtablePokemonStat} AS ps
